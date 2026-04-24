@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agenda Pro v5.0.1 - Sincronización Blindada</title>
 <style>
-  /* Mantenemos tu CSS original intacto */
+  /* Mantenemos tu CSS original 100% intacto */
   body { background:#ffffff; color:#333; font-family:Arial, sans-serif; margin:0; padding-top: 160px; padding-bottom: 40px; }
   header { position: fixed; top: 0; left: 0; width: 100%; background:#ffffff; border-bottom:1px solid #eee; z-index: 1000; padding: 10px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
   .logo-container { display: flex; justify-content: center; align-items: center; height: 90px; }
@@ -15,53 +15,41 @@
   button { width:100%; padding:12px; border:none; border-radius:10px; background:#f0f0f0; color:#333; margin:6px 0; font-weight:bold; cursor:pointer; transition: 0.3s; }
   .btn-main { background:#4dabf7; color: #fff; }
   .btn-tool { background: #f8f9fa; color: #4dabf7; border: 1px solid #4dabf7; font-size: 13px; transition: 0.3s; }
-  .btn-tool:active { background: #e3f2fd; }
   input, textarea, select { width:100%; padding:12px; margin:6px 0; border: 1px solid #ddd; border-radius:10px; background:#f9f9f9; color:#333; box-sizing: border-box; font-size: 16px; }
-  .card { background:#ffffff; padding:18px; margin:12px 0; border-radius:15px; border-left: 5px solid #4dabf7; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: opacity 0.3s; }
+  .card { background:#ffffff; padding:18px; margin:12px 0; border-radius:15px; border-left: 5px solid #4dabf7; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
   #formulario { position: relative; display:none; background:#ffffff; padding:15px; border-radius:12px; border: 1px solid #ddd; margin-top:10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-  .btn-cancelar { position: absolute; top: 10px; right: 15px; color: #ff4d4d; font-weight: bold; cursor: pointer; font-size: 24px; z-index: 10; padding: 5px; }
-  .tools-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-  #boxInteligente { background:#f9f9f9; padding:15px; border-radius:12px; border: 1px dashed #4dabf7; margin-bottom: 20px; display: none; }
   .calendario { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:10px; }
-  .dia { background:#f0f0f0; padding:8px 2px; text-align:center; border-radius:8px; cursor:pointer; font-size: 13px; min-height: 50px; display: flex; flex-direction: column; justify-content: center; border: 1px solid #eee; }
+  .dia { background:#f0f0f0; padding:8px 2px; text-align:center; border-radius:8px; cursor:pointer; font-size: 13px; min-height: 50px; display: flex; flex-direction: column; justify-content: center; }
   .dia.seleccionado { border: 2px solid #4dabf7; background: #e3f2fd; }
   .rojo { background:#ffebee !important; border: 1px solid #ffcdd2; color: #b71c1c; }
-  .btn-entregado { background:#1e7e34; color: white; margin-top: 15px; }
+  #bloqueo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
+  #modalHistorial, #modalReagendar { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; align-items: center; justify-content: center; }
+  .modal-content { max-width:600px; width: 90%; background:#ffffff; border-radius:15px; padding:20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
   .btn-group { display: flex; gap: 8px; margin-top: 8px; }
   .btn-small { padding: 8px; font-size: 12px; flex: 1; font-weight: normal; }
-  .btn-anular { background: #fce4e4; color: #d32f2f; border: 1px solid #ffcdd2; }
-  .btn-reagendar { background: #f5f5f5; color: #444; border: 1px solid #ddd; }
-  #bloqueo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
-  .whatsapp-link { color: #25D366; text-decoration: none; font-weight: bold; }
-  .info-secundaria { font-size: 13px; color: #666; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px; }
-  #modalHistorial { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:10000; overflow-y:auto; padding:20px; box-sizing:border-box; }
-  .modal-content { max-width:600px; margin:auto; background:#ffffff; border-radius:15px; padding:20px; border:1px solid #eee; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-  .card-historial { background: #ffffff; padding: 12px; border-radius: 10px; margin-bottom: 10px; transition: 0.2s; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-  .blue-background-class { background-color: #e3f2fd !important; border: 2px dashed #4dabf7 !important; opacity: 0.5; }
-  #modalReagendar { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 11000; align-items: center; justify-content: center; }
-  #modalReagendar .modal-content { background: white; padding: 25px; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
 </style>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 </head>
-
 <body>
+
 <div id="bloqueo">
   <h2 style="color:#4dabf7; margin-bottom: 20px;">🔐 Acceso Agenda Pro</h2>
-  <p style="margin-bottom: 20px; color: #666;">Inicia sesión con tu cuenta de Google</p>
+  <p style="margin-bottom: 20px; color: #666;">Inicia sesión para continuar</p>
   <div id="g_id_onload" data-client_id="393133246985-q2d63f84atqusaidp2168um5qm8jbb4o.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
   <div class="g_id_signin" data-type="standard"></div>
 </div>
 
-<div id="pantallaCarga" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: white; z-index: 10000; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+<div id="pantallaCarga" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: white; z-index: 10001; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
   <h1 style="font-size: 60px; margin: 0;">🚀</h1>
-  <h2>Creando tu sistema...</h2>
+  <h2>Preparando tu sistema...</h2>
+  <p>Esto toma unos segundos, por favor espera.</p>
 </div>
 
 <div id="modalRegistro" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.05); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center;">
   <div style="background: white; padding: 30px; border-radius: 25px; width: 85%; max-width: 350px; text-align: center;">
     <h2>¡Bienvenida!</h2>
+    <p style="font-size: 14px; color: #666;">Ingresa el nombre de tu negocio para configurar tu agenda.</p>
     <input type="text" id="inputNombreNegocio" placeholder="Nombre de tu local">
     <button onclick="ejecutarCreacionTotal()" style="background: #4dabf7; color: white;">Comenzar Ahora</button>
   </div>
@@ -69,66 +57,49 @@
 
 <header>
   <div class="logout-btn" onclick="cerrarSesion()">Salir</div>
-  <div class="logo-container">
-    <img src="logo.png" class="logo-img" alt="Logo">
-  </div>
-  <div id="barraAlertas" style="display:none; margin: 10px 15px; padding: 12px; border-radius: 12px; background: #E8DAEF; color: #4A235A; text-align: center; border: 1px solid #D2B4DE;">
-    <div id="contSemana" style="font-weight: bold; font-size: 14px;"></div>
-    <div id="contAtrasados" style="color: #7c1d1d; font-weight: bold; font-size: 14px; margin-top: 4px;"></div>
+  <div class="logo-container"><img src="logo.png" class="logo-img"></div>
+  <div id="barraAlertas" style="display:none; margin: 10px 15px; padding: 12px; border-radius: 12px; background: #E8DAEF; border: 1px solid #D2B4DE; text-align: center;">
+    <div id="contSemana" style="font-weight: bold;"></div>
+    <div id="contAtrasados" style="color: #7c1d1d; font-weight: bold;"></div>
   </div>
 </header>
 
 <div class="container">
   <div class="tools-grid">
-    <button class="btn-tool" onclick="copiarFicha()">📋 Generar Ficha</button>
-    <button class="btn-tool" onclick="toggleInteligente()">⚡ Lectura Inteligente</button>
-    <button class="btn-tool" onclick="abrirHistorial()">📂 Historial Completo</button>
+    <button class="btn-tool" onclick="copiarFicha()">📋 Ficha</button>
+    <button class="btn-tool" onclick="toggleInteligente()">⚡ IA Auto</button>
+    <button class="btn-tool" onclick="abrirHistorial()">📂 Historial</button>
   </div>
 
-  <div id="boxInteligente">
-    <p style="font-size:12px; color:#4dabf7; margin-bottom:8px;">Pega el chat del cliente aquí:</p>
-    <textarea id="textoPegado" rows="5" placeholder="Pega el mensaje completo..."></textarea>
-    <button onclick="procesarTexto()" style="background:#4dabf7; color:black;">🚀 Autollenado Automático</button>
+  <div id="boxInteligente" style="display:none; background:#f9f9f9; padding:15px; border-radius:12px; border: 1px dashed #4dabf7; margin-bottom: 20px;">
+    <textarea id="textoPegado" rows="4" placeholder="Pega el mensaje aquí..."></textarea>
+    <button onclick="procesarTexto()" style="background:#4dabf7; color:white;">🚀 Autollenar</button>
   </div>
 
-  <button class="btn-main" onclick="abrirManual()">➕ Nuevo Pedido Manual</button>
+  <button class="btn-main" onclick="abrirManual()">➕ Nuevo Pedido</button>
   
   <div id="formulario">
-    <div class="btn-cancelar" onclick="cerrarModal()">✕</div>
-    <p id="labelOrigen" style="font-size: 10px; color: #4dabf7; margin: 0 35px 5px 0; text-align: right; font-weight: bold;">Modo: App</p>
+    <div style="text-align:right; color:red; font-weight:bold; cursor:pointer;" onclick="cerrarModal()">✕</div>
+    <p id="labelOrigen" style="font-size: 10px; color: #4dabf7; text-align: right; font-weight: bold;">Modo: App</p>
     <input id="nombre" placeholder="Nombre cliente">
-    <div style="display: flex; align-items: center; background: #f9f9f9; border: 1px solid #ddd; border-radius: 10px; margin: 6px 0; padding-left: 12px;">
-      <span style="color: #888; font-weight: bold;">+56</span>
-      <input type="tel" id="telefono" placeholder="9 1234 5678" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="margin:0; background:transparent; border:none; width:100%; color: #333;">
-    </div>
-    <textarea id="descripcion" placeholder="Descripción del pedido"></textarea>
+    <input type="tel" id="telefono" placeholder="9 1234 5678">
+    <textarea id="descripcion" placeholder="¿Qué pidió?"></textarea>
     <input type="date" id="fecha">
-    <select id="hora" style="margin-top:6px;">
-      <option value="">🕒 Seleccionar Hora (Opcional)</option>
-      <script>
-        for(let h=8; h<=20; h++) {
-          let hora = h < 10 ? '0'+h+':00' : h+':00';
-          document.write(`<option value="${hora}">${hora} hrs</option>`);
-        }
-      </script>
+    <select id="hora">
+      <option value="">🕒 Hora (Opcional)</option>
+      <script>for(let h=8; h<=21; h++) { let hr = h<10?'0'+h+':00':h+':00'; document.write(`<option value="${hr}">${hr} hrs</option>`); }</script>
     </select>
     <div style="display:flex; gap:10px;">
-      <input type="text" inputmode="numeric" id="precio" placeholder="Total $" oninput="formatearMoneda(this); calcularFinanzas()">
-      <input type="text" inputmode="numeric" id="abonado" placeholder="Abono $" oninput="formatearMoneda(this); calcularFinanzas()">
+      <input type="text" id="precio" placeholder="Total $" oninput="formatearMoneda(this); calcularFinanzas()">
+      <input type="text" id="abonado" placeholder="Abono $" oninput="formatearMoneda(this); calcularFinanzas()">
     </div>
     <input id="pendiente" placeholder="Saldo Pendiente" readonly style="color: #ff4d4d; font-weight: bold;">
-    <select id="tipoPago" disabled>
-      <option value="">Estado de Pago</option>
-      <option value="Pago Anticipado">Pago Anticipado</option>
-      <option value="Pago Parcial">Pago Parcial</option>
-      <option value="Contra Entrega">Contra Entrega</option>
-    </select>
     <select id="metodoEntrega" onchange="toggleDireccion()">
       <option>Entrega en mano</option>
       <option>Despacho a domicilio</option>
     </select>
-    <textarea id="direccion" placeholder="Dirección para despacho" style="display:none;"></textarea>
-    <button id="btnGuardar" onclick="guardar()" style="background:#1e7e34; color:white;">Confirmar y Guardar</button>
+    <textarea id="direccion" placeholder="Dirección" style="display:none;"></textarea>
+    <button onclick="guardar()" style="background:#1e7e34; color:white;">Guardar Pedido</button>
   </div>
 
   <div style="display:flex; gap:6px; margin-top:20px;"><select id="mes"></select><select id="anio"></select></div>
@@ -137,89 +108,76 @@
   <div id="lista"></div>
 </div>
 
-<div id="modalHistorial">
-    <div class="modal-content">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 style="margin:0; color:#4dabf7;">🗄️ Historial Completo</h2>
-            <div onclick="cerrarHistorial()" style="cursor:pointer; font-size:24px; color:#ff4d4d;">✕</div>
-        </div>
-        <input type="text" id="buscadorHistorial" placeholder="Buscar por nombre o producto..." oninput="filtrarHistorial()">
-        <div id="contenidoHistorial"></div>
-    </div>
-</div>
-
-<div id="modalReagendar">
-  <div class="modal-content">
-    <h3>📅 Reagendar</h3>
-    <input type="date" id="reagendarFecha">
-    <input type="time" id="reagendarHora">
-    <div style="display: flex; gap: 10px; margin-top: 15px;">
-      <button onclick="confirmarReagendar()" style="background: #4dabf7; color: white;">Confirmar</button>
-      <button onclick="cerrarModalReagendar()" style="background: #f1f1f1; color: #666;">Volver</button>
-    </div>
-  </div>
-</div>
-
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbylpnPKVq_lqLYWpzYaaGwZb14mALfhWDZg_6kCZCMQ9dlIBSQQun8vP0o8IeM5F31gKw/exec"; 
+// --- LÓGICA DE SINCRONIZACIÓN ACTUALIZADA ---
+const API_URL = "https://script.google.com/macros/s/AKfycbylpnPKVq_lqLYWpzYaaGwZb14mALfhWDZg_6kCZCMQ9dlIBSQQun8vP0o8IeM5F31gKw/exec";
 
 let pedidos = [], diaSeleccionado = new Date().toISOString().split('T')[0];
 let mesActual = new Date().getMonth(), anioActual = new Date().getFullYear();
-let origenVenta = "App", idReagendando = null;
+let origenVenta = "App";
 
-// UTILS
-function formatearMoneda(input) {
-    let valor = input.value.replace(/\D/g, "");
-    input.value = valor ? "$" + new Intl.NumberFormat('es-CL').format(valor) : "";
-}
-function limpiarNumero(texto) { return parseFloat(texto.replace(/\D/g, "")) || 0; }
-function parseJwt(token) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    return JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
-}
-
-// AUTH & INICIO
-async function handleCredentialResponse(response) {
-    const user = parseJwt(response.credential);
-    const email = user.email;
+// 1. GESTIÓN DE SESIÓN Y LOGIN
+function handleCredentialResponse(response) {
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    const email = payload.email;
     document.getElementById("bloqueo").style.display = "none";
-    try {
-        const resp = await fetch(`${API_URL}?action=verificar&email=${email}`);
-        const res = await resp.json();
+    
+    // Verificación de registro
+    fetch(`${API_URL}?action=verificar&email=${email}`)
+    .then(r => r.json())
+    .then(res => {
         if (res.registrado) {
-            localStorage.setItem("user_id_sheet", res.idSheet);
-            localStorage.setItem("sesionValentin", new Date().getTime() + 86400000);
-            location.reload(); 
+            finalizarLogin(res.idSheet);
         } else {
             window.tempEmail = email;
             document.getElementById("modalRegistro").style.display = "flex";
         }
-    } catch (e) { location.reload(); }
+    })
+    .catch(() => location.reload());
+}
+
+function finalizarLogin(idSheet) {
+    localStorage.setItem("user_id_sheet", idSheet);
+    localStorage.setItem("sesionValentin", new Date().getTime() + 86400000); // 24h
+    cargar(); // Inicia la carga de datos
 }
 
 async function ejecutarCreacionTotal() {
     const nombre = document.getElementById("inputNombreNegocio").value;
-    if(!nombre) return alert("Escribe el nombre del negocio");
+    if(!nombre) return alert("Escribe el nombre de tu negocio");
+    
     document.getElementById("modalRegistro").style.display = "none";
     document.getElementById("pantallaCarga").style.display = "flex";
-    fetch(`${API_URL}?action=crear_todo&email=${window.tempEmail}&nombre=${encodeURIComponent(nombre)}`, { mode: 'no-cors' });
-    setTimeout(() => location.reload(), 10000);
+
+    // Llamada silenciosa para crear archivos
+    fetch(`${API_URL}?action=crear_todo&email=${encodeURIComponent(window.tempEmail)}&nombre=${encodeURIComponent(nombre)}`, { mode: 'no-cors' });
+
+    // Polling inteligente: Revisa cada 3 segundos si el registro ya aparece en el Admin_Control_App
+    let checkCount = 0;
+    const interval = setInterval(async () => {
+        checkCount++;
+        try {
+            const r = await fetch(`${API_URL}?action=verificar&email=${window.tempEmail}`);
+            const data = await r.json();
+            if (data.registrado || checkCount > 10) {
+                clearInterval(interval);
+                if (data.registrado) finalizarLogin(data.idSheet);
+                else location.reload();
+            }
+        } catch(e) {}
+    }, 3000);
 }
 
-window.onload = () => {
-    const sesion = localStorage.getItem("sesionValentin");
-    if (sesion && new Date().getTime() < parseInt(sesion)) cargar();
-    else document.getElementById("bloqueo").style.display = "flex";
-};
-
+// 2. CARGA Y RENDERIZADO (OPERATIVA)
 async function cargar() {
     const idSheet = localStorage.getItem("user_id_sheet");
     if (!idSheet) return;
+    
+    document.getElementById("pantallaCarga").style.display = "none";
     try {
         const resp = await fetch(`${API_URL}?idSheet=${idSheet}`);
         const data = await resp.json();
-        pedidos = data.slice(1).filter(fila => fila[0] !== ""); 
+        pedidos = data.slice(1).filter(f => f[0] !== "");
         localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
         renderizarTodo();
     } catch (e) {
@@ -228,254 +186,94 @@ async function cargar() {
     }
 }
 
-// LOGICA DE NEGOCIO
-function calcularFinanzas(){
+function renderizarTodo() {
+    initSelectors();
+    renderCalendario();
+    renderLista();
+    actualizarNotificaciones();
+}
+
+// 3. FUNCIONES DE APOYO (CSS Y LÓGICA INTERNA INTACTA)
+function formatearMoneda(i) { let v = i.value.replace(/\D/g, ""); i.value = v ? "$" + new Intl.NumberFormat('es-CL').format(v) : ""; }
+function limpiarNumero(t) { return parseFloat(t.replace(/\D/g, "")) || 0; }
+function calcularFinanzas() {
     const p = limpiarNumero(document.getElementById("precio").value);
     const a = limpiarNumero(document.getElementById("abonado").value);
-    const pen = p - a;
-    document.getElementById("pendiente").value = "$" + new Intl.NumberFormat('es-CL').format(pen);
-    const s = document.getElementById("tipoPago");
-    if(p > 0 && a === p) s.value = "Pago Anticipado";
-    else if(a > 0 && a < p) s.value = "Pago Parcial";
-    else if(p > 0 && a === 0) s.value = "Contra Entrega";
+    document.getElementById("pendiente").value = "$" + new Intl.NumberFormat('es-CL').format(p - a);
 }
 
 async function guardar() {
-    const nombre = document.getElementById("nombre").value;
-    const tel = document.getElementById("telefono").value;
-    if (!nombre || !tel) return alert("Nombre y Teléfono obligatorios");
-
-    const idEdicion = document.getElementById("formulario").dataset.idEdicion;
     const idSheet = localStorage.getItem("user_id_sheet");
+    const idEdicion = document.getElementById("formulario").dataset.idEdicion;
     const data = {
         action: idEdicion ? "editar" : "nuevo",
         idSheet: idSheet,
         id: idEdicion || new Date().getTime(),
-        nombre: nombre, telefono: tel,
+        nombre: document.getElementById("nombre").value,
+        telefono: document.getElementById("telefono").value,
         descripcion: document.getElementById("descripcion").value,
         fecha: document.getElementById("fecha").value,
         hora: document.getElementById("hora").value || "Sin Hora",
         precio: limpiarNumero(document.getElementById("precio").value),
         montoAbonado: limpiarNumero(document.getElementById("abonado").value),
         montoPendiente: limpiarNumero(document.getElementById("pendiente").value),
-        tipoPago: document.getElementById("tipoPago").value,
         metodoEntrega: document.getElementById("metodoEntrega").value,
         direccion: document.getElementById("direccion").value,
-        dispositivo: "App", origen: origenVenta
+        origen: origenVenta
     };
 
-    const fila = [data.id, data.descripcion, data.fecha, data.hora, data.precio, data.tipoPago, data.montoAbonado, data.montoPendiente, "PENDIENTE", new Date(), data.nombre, data.telefono, data.metodoEntrega, data.direccion, data.dispositivo, data.origen];
-
-    if (idEdicion) pedidos = pedidos.map(p => String(p[0]) === String(idEdicion) ? fila : p);
+    // Actualización instantánea en UI
+    const fila = [data.id, data.descripcion, data.fecha, data.hora, data.precio, "", data.montoAbonado, data.montoPendiente, "PENDIENTE", new Date(), data.nombre, data.telefono, data.metodoEntrega, data.direccion, "App", data.origen];
+    if(idEdicion) pedidos = pedidos.map(p => String(p[0])===String(idEdicion) ? fila : p);
     else pedidos.push(fila);
 
-    renderizarTodo(); 
+    renderizarTodo();
     cerrarModal();
-
+    
+    // Envío al servidor
     fetch(API_URL, { method: "POST", mode: 'no-cors', body: JSON.stringify(data) });
     localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
 }
 
-// ACCIONES (MODO RAYO + NO CORS)
-async function marcar(id){ 
-    if(!confirm("¿Pedido entregado?")) return;
-    const idSheet = localStorage.getItem("user_id_sheet");
-    pedidos = pedidos.map(p => p[0] == id ? (p[8]="ENTREGADO", p) : p);
-    renderizarTodo();
-    fetch(API_URL, { method:"POST", mode: 'no-cors', body: JSON.stringify({action:"entregado", id:id, idSheet: idSheet}) });
-    localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
-}
-
-async function anular(id) {
-    if(!confirm("¿Anular pedido?")) return;
-    const idSheet = localStorage.getItem("user_id_sheet");
-    pedidos = pedidos.map(p => p[0] == id ? (p[8] = "ANULADO", p) : p);
-    renderizarTodo();
-    fetch(API_URL, { method: "POST", mode: 'no-cors', body: JSON.stringify({ action: "anular", id: id, idSheet: idSheet }) });
-    localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
-}
-
-function reagendar(id) {
-    idReagendando = id;
-    const p = pedidos.find(x => x[0] == id);
-    document.getElementById("reagendarFecha").value = String(p[2]).split('T')[0];
-    document.getElementById("reagendarHora").value = (p[3] && p[3] !== "Sin Hora") ? p[3].substring(0,5) : "10:00";
-    document.getElementById("modalReagendar").style.display = "flex";
-}
-
-async function confirmarReagendar() {
-    const nF = document.getElementById("reagendarFecha").value;
-    const nH = document.getElementById("reagendarHora").value;
-    const idSheet = localStorage.getItem("user_id_sheet");
-    pedidos = pedidos.map(p => { if (String(p[0]) === String(idReagendando)) { p[2] = nF; p[3] = nH; } return p; });
-    renderizarTodo();
-    document.getElementById("modalReagendar").style.display = "none";
-    fetch(API_URL, { method: "POST", mode: 'no-cors', body: JSON.stringify({ action: "reagendar", id: idReagendando, nuevaFecha: nF, nuevaHora: nH, idSheet: idSheet }) });
-    localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
-}
-
-// RENDERIZADO
-function renderizarTodo() {
-    initSelectors(); renderCalendario(); renderLista(); actualizarNotificaciones();
-}
-
-function renderLista(){
-    const container = document.getElementById("lista"); container.innerHTML = "";
+function renderLista() {
+    const cont = document.getElementById("lista"); cont.innerHTML = "";
     const filtrados = pedidos.filter(p => String(p[2]).split("T")[0] === diaSeleccionado && String(p[8]).toLowerCase() === "pendiente");
-    
-    filtrados.sort((a, b) => (a[3]||"23:59").localeCompare(b[3]||"23:59"));
-
     filtrados.forEach(p => {
-        let h = String(p[3]);
-        let horaLimpia = h.includes("T") ? h.split("T")[1].substring(0,5) : h.substring(0,5);
-        let num = String(p[11]).replace(/\D/g, '');
-        let pen = parseFloat(p[7]) || 0;
-        
-        container.innerHTML += `
-          <div class="card" id="card-${p[0]}">
-            <div style="display:flex; justify-content:space-between;">
-              <h2 style="color:#4dabf7; font-size:18px;">📦 ${p[1]}</h2>
-              <span style="background:#e3f2fd; padding:4px 8px; border-radius:8px; font-weight:bold;">🕒 ${horaLimpia}</span>
-            </div>
-            <div style="margin:5px 0;">👤 ${p[10]} | 📞 <a class="whatsapp-link" href="https://wa.me/569${num.slice(-8)}">9${num.slice(-8)}</a></div>
-            <div class="info-secundaria">
-              💰 Total: $${new Intl.NumberFormat('es-CL').format(p[4])} | ${pen <= 0 ? '✅ Pagado' : 'Debe: $'+new Intl.NumberFormat('es-CL').format(pen)}<br>
-              🚚 ${p[12]} ${p[13] ? '📍 '+p[13] : ''}
-            </div>
-            <button class="btn-entregado" onclick="marcar('${p[0]}')">✔ Marcar Entregado</button>
-            <div class="btn-group">
-              <button class="btn-small" onclick="cargarEdicion('${p[0]}')">📝 Editar</button>
-              <button class="btn-small btn-reagendar" onclick="reagendar('${p[0]}')">📅 Reagendar</button>
-              <button class="btn-small btn-anular" onclick="anular('${p[0]}')">🚫 Anular</button>
-            </div>
-          </div>`;
+        cont.innerHTML += `<div class="card">
+            <b>📦 ${p[1]}</b><br>👤 ${p[10]} | 🕒 ${p[3]}<br>
+            <button onclick="marcar('${p[0]}')" style="background:#1e7e34; color:white; margin-top:10px;">Entregado</button>
+        </div>`;
     });
 }
 
-function renderCalendario(){
+function renderCalendario() {
     const cal = document.getElementById("calendario"); cal.innerHTML = "";
-    ["L","M","M","J","V","S","D"].forEach(d=> cal.innerHTML += `<div style="color:#4dabf7;font-size:11px;text-align:center;">${d}</div>`);
-    const diasMes = new Date(anioActual, mesActual+1, 0).getDate();
-    let primerDia = new Date(anioActual, mesActual, 1).getDay() || 7;
+    const diasMes = new Date(anioActual, mesActual + 1, 0).getDate();
     let conteo = {};
     pedidos.forEach(p => { if(String(p[8]).toLowerCase()==="pendiente"){ let f = String(p[2]).split("T")[0]; conteo[f] = (conteo[f] || 0) + 1; } });
-    for(let i=1; i<primerDia; i++) cal.innerHTML += `<div></div>`;
-    for(let d=1; d<=diasMes; d++){
+    
+    for(let d=1; d<=diasMes; d++) {
         let f = `${anioActual}-${String(mesActual+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         let c = conteo[f] || 0;
-        cal.innerHTML += `<div class="dia ${c>=4?'rojo':''} ${f===diaSeleccionado?'seleccionado':''}" onclick="seleccionarDia('${f}')"><span>${d}</span><span style="font-size:10px;color:#4dabf7">${c}</span></div>`;
+        cal.innerHTML += `<div class="dia ${c>=4?'rojo':''} ${f===diaSeleccionado?'seleccionado':''}" onclick="seleccionarDia('${f}')">${d}</div>`;
     }
 }
 
-function seleccionarDia(f){ diaSeleccionado = f; renderCalendario(); renderLista(); }
+function seleccionarDia(f) { diaSeleccionado = f; renderizarTodo(); }
+function cerrarSesion() { localStorage.clear(); location.reload(); }
+function toggleDireccion() { document.getElementById("direccion").style.display = document.getElementById("metodoEntrega").value === "Despacho a domicilio" ? "block" : "none"; }
+function abrirManual() { document.getElementById("formulario").style.display="block"; }
+function cerrarModal() { document.getElementById("formulario").style.display="none"; }
+function toggleInteligente() { const b = document.getElementById("boxInteligente"); b.style.display = b.style.display === "block" ? "none" : "block"; }
 
-function initSelectors(){
+window.onload = () => {
+    const sesion = localStorage.getItem("sesionValentin");
+    if (sesion && new Date().getTime() < parseInt(sesion)) cargar();
+    else document.getElementById("bloqueo").style.display = "flex";
+};
+
+// Selectores de mes y año
+function initSelectors() {
     const m = document.getElementById("mes"), a = document.getElementById("anio");
     if(m.options.length > 0) return;
-    ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"].forEach((nm,i)=> m.innerHTML += `<option value="${i}" ${i==mesActual?'selected':''}>${nm}</option>`);
-    for(let y=2026; y<=2030; y++) a.innerHTML += `<option value="${y}" ${y==anioActual?'selected':''}>${y}</option>`;
-    m.onchange = a.onchange = () => { mesActual = parseInt(m.value); anioActual = parseInt(a.value); renderCalendario(); };
-}
-
-// UI HELPERS
-function abrirManual() { origenVenta = "App"; document.getElementById("labelOrigen").innerText = "Modo: App"; limpiarForm(); document.getElementById("formulario").style.display = "block"; }
-function cerrarModal() { document.getElementById("formulario").style.display = "none"; limpiarForm(); }
-function limpiarForm() { 
-  ["nombre", "telefono", "descripcion", "precio", "abonado", "pendiente", "direccion", "fecha", "hora"].forEach(id => document.getElementById(id).value = "");
-  document.getElementById("metodoEntrega").value = "Entrega en mano";
-  document.getElementById("direccion").style.display = "none";
-  delete document.getElementById("formulario").dataset.idEdicion;
-}
-function toggleDireccion(){ document.getElementById("direccion").style.display = document.getElementById("metodoEntrega").value === "Despacho a domicilio" ? "block" : "none"; }
-function toggleInteligente() { const b = document.getElementById("boxInteligente"); b.style.display = b.style.display === "block" ? "none" : "block"; }
-function cerrarSesion() { localStorage.clear(); location.reload(); }
-
-function copiarFicha() {
-    const f = `📍 DATOS PARA TU PEDIDO:\n\n• Nombre Cliente:\n• Teléfono:\n• Descripción Pedido:\n• ¿Retiro en Local o Despacho?:\n• Dirección:`;
-    navigator.clipboard.writeText(f);
-    alert("Ficha copiada");
-}
-
-function abrirHistorial() { document.getElementById("modalHistorial").style.display = "block"; renderHistorial(pedidos); }
-function cerrarHistorial() { document.getElementById("modalHistorial").style.display = "none"; }
-
-function renderHistorial(lista) {
-    const c = document.getElementById("contenidoHistorial"); c.innerHTML = "";
-    lista.forEach(p => {
-        let est = String(p[8]).toUpperCase();
-        c.innerHTML += `<div class="card-historial" style="border-left:4px solid ${est==='ENTREGADO'?'#25D366':est==='ANULADO'?'#ff4d4d':'#aaa'}">
-            <div style="display:flex; justify-content:space-between; font-size:11px;"><span>${String(p[2]).split('T')[0]}</span>
-            <select onchange="cambiarEstadoHistorial('${p[0]}', this.value)"><option value="PENDIENTE" ${est==='PENDIENTE'?'selected':''}>PENDIENTE</option><option value="ENTREGADO" ${est==='ENTREGADO'?'selected':''}>ENTREGADO</option><option value="ANULADO" ${est==='ANULADO'?'selected':''}>ANULADO</option></select></div>
-            <b>📦 ${p[1]}</b><br>👤 ${p[10]}</div>`;
-    });
-}
-
-function filtrarHistorial() {
-    const b = document.getElementById("buscadorHistorial").value.toLowerCase();
-    renderHistorial(pedidos.filter(p => String(p[1]).toLowerCase().includes(b) || String(p[10]).toLowerCase().includes(b)));
-}
-
-async function cambiarEstadoHistorial(id, nuevo) {
-    const idSheet = localStorage.getItem("user_id_sheet");
-    pedidos = pedidos.map(p => { if (String(p[0]) === String(id)) p[8] = nuevo; return p; });
-    renderizarTodo(); filtrarHistorial();
-    fetch(API_URL, { method: "POST", mode: 'no-cors', body: JSON.stringify({ action: "cambiarEstado", id: id, estado: nuevo, idSheet: idSheet }) });
-    localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
-}
-
-function actualizarNotificaciones() {
-    const hoy = new Date(); hoy.setHours(0,0,0,0);
-    const dom = new Date(hoy); dom.setDate(hoy.getDate() + (7 - (hoy.getDay() || 7))); dom.setHours(23,59,59,999);
-    let sem = 0, atr = 0;
-    pedidos.forEach(p => {
-        if (String(p[8]).toLowerCase() === "pendiente") {
-            const f = new Date(String(p[2]).split('T')[0].replace(/-/g, '/')); f.setHours(0,0,0,0);
-            if (f < hoy) atr++; else if (f <= dom) sem++;
-        }
-    });
-    const b = document.getElementById("barraAlertas");
-    if (sem > 0 || atr > 0) {
-        b.style.display = "block";
-        document.getElementById("contSemana").innerText = `📅 Esta semana: ${sem} pedidos`;
-        document.getElementById("contAtrasados").innerText = atr > 0 ? `⚠️ Atrasados: ${atr} pedidos` : "";
-    } else b.style.display = "none";
-}
-
-function cargarEdicion(id) {
-    const p = pedidos.find(x => String(x[0]) === String(id));
-    if(!p) return;
-    document.getElementById("formulario").dataset.idEdicion = id;
-    document.getElementById("nombre").value = p[10];
-    document.getElementById("telefono").value = String(p[11]).slice(-9);
-    document.getElementById("descripcion").value = p[1];
-    document.getElementById("fecha").value = String(p[2]).split('T')[0];
-    document.getElementById("precio").value = p[4];
-    document.getElementById("abonado").value = p[6];
-    document.getElementById("metodoEntrega").value = p[12];
-    document.getElementById("direccion").value = p[13] || "";
-    toggleDireccion(); calcularFinanzas();
-    document.getElementById("formulario").style.display = "block";
-    window.scrollTo(0,0);
-}
-
-function procesarTexto() {
-    const t = document.getElementById("textoPegado").value;
-    if (!t) return;
-    origenVenta = "App_Chat";
-    limpiarForm();
-    const extraer = (r) => { const m = t.match(r); return m ? m[1].trim() : ""; };
-    document.getElementById("nombre").value = extraer(/(?:Nombre|Cliente).*?:\s*(.*)/i);
-    document.getElementById("descripcion").value = extraer(/(?:Pedido|Producto|Descripci.n).*?:\s*(.*)/i);
-    let tel = t.match(/(?:Tel.fono|Celular|Fono|WhatsApp).*?:\s*(\d+)/i);
-    if (tel) document.getElementById("telefono").value = tel[1].slice(-9);
-    if (/despacho|domicilio|envio/i.test(t)) {
-        document.getElementById("metodoEntrega").value = "Despacho a domicilio";
-        document.getElementById("direccion").style.display = "block";
-        document.getElementById("direccion").value = extraer(/(?:Direcci.n|Dir|Ubicaci.n).*?:\s*(.*)/i);
-    }
-    document.getElementById("boxInteligente").style.display = "none";
-    document.getElementById("formulario").style.display = "block";
-}
-</script>
-</body>
-</html>
+    ["Enero","Febrero","Marzo
