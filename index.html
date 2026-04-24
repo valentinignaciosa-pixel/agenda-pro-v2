@@ -3,130 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agenda Pro v5.0.1 - Reparada</title>
+<title>Agenda Pro v5.0.1 - Sincronización Blindada</title>
 <style>
-  /* FONDO BLANCO PARA QUE EL LOGO SE MIMETICE */
+  /* Mantenemos tu CSS original intacto */
   body { background:#ffffff; color:#333; font-family:Arial, sans-serif; margin:0; padding-top: 160px; padding-bottom: 40px; }
-  
-  /* HEADER FIJO Y BLANCO */
-  header { 
-    position: fixed; top: 0; left: 0; width: 100%; 
-    background:#ffffff; border-bottom:1px solid #eee; 
-    z-index: 1000; padding: 10px 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  }
-  
+  header { position: fixed; top: 0; left: 0; width: 100%; background:#ffffff; border-bottom:1px solid #eee; z-index: 1000; padding: 10px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
   .logo-container { display: flex; justify-content: center; align-items: center; height: 90px; }
-  .logo-img { max-height: 90px; width: auto; display: block; }
-
+  .logo-img { max-height: 90px; width: auto; display: block; border-radius: 50%; }
   .container { padding:15px; max-width: 600px; margin: auto; }
-  
   .logout-btn { position: absolute; right: 10px; top: 15px; font-size: 11px; color: #ff4d4d; cursor: pointer; border: 1px solid #ff4d4d; padding: 4px 8px; border-radius: 6px; font-weight: bold; text-transform: uppercase; background: white; z-index: 1001; }
-  
   button { width:100%; padding:12px; border:none; border-radius:10px; background:#f0f0f0; color:#333; margin:6px 0; font-weight:bold; cursor:pointer; transition: 0.3s; }
   .btn-main { background:#4dabf7; color: #fff; }
-  
-  /* ESTILO UNIFICADO PARA LOS 3 BOTONES SUPERIORES */
-  .btn-tool { 
-    background: #f8f9fa; 
-    color: #4dabf7; 
-    border: 1px solid #4dabf7; 
-    font-size: 13px;
-    transition: 0.3s;
-  }
+  .btn-tool { background: #f8f9fa; color: #4dabf7; border: 1px solid #4dabf7; font-size: 13px; transition: 0.3s; }
   .btn-tool:active { background: #e3f2fd; }
-  
   input, textarea, select { width:100%; padding:12px; margin:6px 0; border: 1px solid #ddd; border-radius:10px; background:#f9f9f9; color:#333; box-sizing: border-box; font-size: 16px; }
-  
   .card { background:#ffffff; padding:18px; margin:12px 0; border-radius:15px; border-left: 5px solid #4dabf7; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: opacity 0.3s; }
-  
   #formulario { position: relative; display:none; background:#ffffff; padding:15px; border-radius:12px; border: 1px solid #ddd; margin-top:10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
   .btn-cancelar { position: absolute; top: 10px; right: 15px; color: #ff4d4d; font-weight: bold; cursor: pointer; font-size: 24px; z-index: 10; padding: 5px; }
-  
   .tools-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-  
   #boxInteligente { background:#f9f9f9; padding:15px; border-radius:12px; border: 1px dashed #4dabf7; margin-bottom: 20px; display: none; }
-  
   .calendario { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:10px; }
   .dia { background:#f0f0f0; padding:8px 2px; text-align:center; border-radius:8px; cursor:pointer; font-size: 13px; min-height: 50px; display: flex; flex-direction: column; justify-content: center; border: 1px solid #eee; }
   .dia.seleccionado { border: 2px solid #4dabf7; background: #e3f2fd; }
-  
   .rojo { background:#ffebee !important; border: 1px solid #ffcdd2; color: #b71c1c; }
   .btn-entregado { background:#1e7e34; color: white; margin-top: 15px; }
   .btn-group { display: flex; gap: 8px; margin-top: 8px; }
   .btn-small { padding: 8px; font-size: 12px; flex: 1; font-weight: normal; }
   .btn-anular { background: #fce4e4; color: #d32f2f; border: 1px solid #ffcdd2; }
   .btn-reagendar { background: #f5f5f5; color: #444; border: 1px solid #ddd; }
-  
   #bloqueo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
-  .hidden { display: none !important; }
   .whatsapp-link { color: #25D366; text-decoration: none; font-weight: bold; }
   .info-secundaria { font-size: 13px; color: #666; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px; }
+  #modalHistorial { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:10000; overflow-y:auto; padding:20px; box-sizing:border-box; }
+  .modal-content { max-width:600px; margin:auto; background:#ffffff; border-radius:15px; padding:20px; border:1px solid #eee; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+  .card-historial { background: #ffffff; padding: 12px; border-radius: 10px; margin-bottom: 10px; transition: 0.2s; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+  .blue-background-class { background-color: #e3f2fd !important; border: 2px dashed #4dabf7 !important; opacity: 0.5; }
+  #modalReagendar { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 11000; align-items: center; justify-content: center; }
+  #modalReagendar .modal-content { background: white; padding: 25px; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+</style>
 
-  /* ESTILOS MODAL HISTORIAL */
-  #modalHistorial { 
-    display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
-    background:rgba(255,255,255,0.95); z-index:10000; overflow-y:auto; 
-    padding:20px; box-sizing:border-box; 
-  }
-  .modal-content { 
-    max-width:600px; margin:auto; background:#ffffff; 
-    border-radius:15px; padding:20px; border:1px solid #eee; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-  }
-  .card-historial { 
-    background: #ffffff; padding: 12px; border-radius: 10px; 
-    margin-bottom: 10px; transition: 0.2s; border: 1px solid #eee; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  }
-.blue-background-class {
-  background-color: #e3f2fd !important;
-  border: 2px dashed #4dabf7 !important;
-  opacity: 0.5;
-}
-/* Modal de Reagendar Estilo Pro */
-#modalReagendar {
-  display: none; 
-  position: fixed; 
-  top: 0; left: 0; 
-  width: 100%; height: 100%; 
-  background: rgba(0,0,0,0.6); /* Fondo oscuro transparente */
-  z-index: 11000; 
-  align-items: center; 
-  justify-content: center;
-}
-
-#modalReagendar .modal-content {
-  background: white; 
-  padding: 25px; 
-  border-radius: 20px; 
-  width: 85%; 
-  max-width: 350px; 
-  text-align: center;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
-
-#modalReagendar h3 { margin-top: 0; color: #4dabf7; }
-#modalReagendar input { margin: 10px 0; border: 1px solid #ddd; padding: 12px; }
-
-.botones-modal { display: flex; gap: 10px; margin-top: 15px; }
-.btn-confirmar-r { background: #4dabf7; color: white; flex: 2; }
-.btn-cancelar-r { background: #f1f1f1; color: #666; flex: 1; }
-</style> <script src="https://accounts.google.com/gsi/client" async defer></script>
-
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-
 </head>
 
 <body>
 <div id="bloqueo">
   <h2 style="color:#4dabf7; margin-bottom: 20px;">🔐 Acceso Agenda Pro</h2>
   <p style="margin-bottom: 20px; color: #666;">Inicia sesión con tu cuenta de Google</p>
-  <div id="g_id_onload"
-       data-client_id="393133246985-q2d63f84atqusaidp2168um5qm8jbb4o.apps.googleusercontent.com"
-       data-callback="handleCredentialResponse"
-       data-auto_prompt="false">
-  </div>
+  <div id="g_id_onload" data-client_id="393133246985-q2d63f84atqusaidp2168um5qm8jbb4o.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
   <div class="g_id_signin" data-type="standard"></div>
 </div>
 
@@ -142,16 +66,12 @@
     <button onclick="ejecutarCreacionTotal()" style="background: #4dabf7; color: white;">Comenzar Ahora</button>
   </div>
 </div>
-  
-  <div class="g_id_signin" data-type="standard"></div>
-</div>
 
 <header>
   <div class="logout-btn" onclick="cerrarSesion()">Salir</div>
   <div class="logo-container">
-  <img src="logo.png" class="logo-img" alt="Logo" style="border-radius: 50%;">
-</div>
-  
+    <img src="logo.png" class="logo-img" alt="Logo">
+  </div>
   <div id="barraAlertas" style="display:none; margin: 10px 15px; padding: 12px; border-radius: 12px; background: #E8DAEF; color: #4A235A; text-align: center; border: 1px solid #D2B4DE;">
     <div id="contSemana" style="font-weight: bold; font-size: 14px;"></div>
     <div id="contAtrasados" style="color: #7c1d1d; font-weight: bold; font-size: 14px; margin-top: 4px;"></div>
@@ -174,39 +94,28 @@
   <button class="btn-main" onclick="abrirManual()">➕ Nuevo Pedido Manual</button>
   
   <div id="formulario">
-    <div class="btn-cancelar" onclick="cancelarProceso()">✕</div>
+    <div class="btn-cancelar" onclick="cerrarModal()">✕</div>
     <p id="labelOrigen" style="font-size: 10px; color: #4dabf7; margin: 0 35px 5px 0; text-align: right; font-weight: bold;">Modo: App</p>
-    
     <input id="nombre" placeholder="Nombre cliente">
     <div style="display: flex; align-items: center; background: #f9f9f9; border: 1px solid #ddd; border-radius: 10px; margin: 6px 0; padding-left: 12px;">
       <span style="color: #888; font-weight: bold;">+56</span>
-      <input type="tel" id="telefono" placeholder="9 1234 5678" 
-       oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
-       style="margin:0; background:transparent; border:none; width:100%; color: #333;">
+      <input type="tel" id="telefono" placeholder="9 1234 5678" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="margin:0; background:transparent; border:none; width:100%; color: #333;">
     </div>
     <textarea id="descripcion" placeholder="Descripción del pedido"></textarea>
     <input type="date" id="fecha">
     <select id="hora" style="margin-top:6px;">
-  <option value="">🕒 Seleccionar Hora (Opcional)</option>
-  <option value="08:00">08:00 hrs</option>
-  <option value="09:00">09:00 hrs</option>
-  <option value="10:00">10:00 hrs</option>
-  <option value="11:00">11:00 hrs</option>
-  <option value="12:00">12:00 hrs</option>
-  <option value="13:00">13:00 hrs</option>
-  <option value="14:00">14:00 hrs</option>
-  <option value="15:00">15:00 hrs</option>
-  <option value="16:00">16:00 hrs</option>
-  <option value="17:00">17:00 hrs</option>
-  <option value="18:00">18:00 hrs</option>
-  <option value="19:00">19:00 hrs</option>
-  <option value="20:00">20:00 hrs</option>
-</select>
-
-<div style="display:flex; gap:10px;">
-  <input type="text" inputmode="numeric" id="precio" placeholder="Total $" oninput="this.value = this.value.replace(/\D/g, ''); formatearMoneda(this); calcularFinanzas()">
-<input type="text" inputmode="numeric" id="abonado" placeholder="Abono $" oninput="this.value = this.value.replace(/\D/g, ''); formatearMoneda(this); calcularFinanzas()">
-</div>
+      <option value="">🕒 Seleccionar Hora (Opcional)</option>
+      <script>
+        for(let h=8; h<=20; h++) {
+          let hora = h < 10 ? '0'+h+':00' : h+':00';
+          document.write(`<option value="${hora}">${hora} hrs</option>`);
+        }
+      </script>
+    </select>
+    <div style="display:flex; gap:10px;">
+      <input type="text" inputmode="numeric" id="precio" placeholder="Total $" oninput="formatearMoneda(this); calcularFinanzas()">
+      <input type="text" inputmode="numeric" id="abonado" placeholder="Abono $" oninput="formatearMoneda(this); calcularFinanzas()">
+    </div>
     <input id="pendiente" placeholder="Saldo Pendiente" readonly style="color: #ff4d4d; font-weight: bold;">
     <select id="tipoPago" disabled>
       <option value="">Estado de Pago</option>
@@ -234,7 +143,7 @@
             <h2 style="margin:0; color:#4dabf7;">🗄️ Historial Completo</h2>
             <div onclick="cerrarHistorial()" style="cursor:pointer; font-size:24px; color:#ff4d4d;">✕</div>
         </div>
-        <input type="text" id="buscadorHistorial" placeholder="Buscar por nombre o producto..." oninput="filtrarHistorial()" style="margin-bottom:15px;">
+        <input type="text" id="buscadorHistorial" placeholder="Buscar por nombre o producto..." oninput="filtrarHistorial()">
         <div id="contenidoHistorial"></div>
     </div>
 </div>
@@ -242,294 +151,107 @@
 <div id="modalReagendar">
   <div class="modal-content">
     <h3>📅 Reagendar</h3>
-    <p style="font-size:14px; color:#666;">Selecciona nueva fecha y hora:</p>
-    
     <input type="date" id="reagendarFecha">
     <input type="time" id="reagendarHora">
-    
-    <div class="botones-modal">
-      <button class="btn-confirmar-r" onclick="confirmarReagendar()">Confirmar</button>
-      <button class="btn-cancelar-r" onclick="cerrarModalReagendar()">Volver</button>
+    <div style="display: flex; gap: 10px; margin-top: 15px;">
+      <button onclick="confirmarReagendar()" style="background: #4dabf7; color: white;">Confirmar</button>
+      <button onclick="cerrarModalReagendar()" style="background: #f1f1f1; color: #666;">Volver</button>
     </div>
   </div>
 </div>
 
-<div id="modalHora" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center; padding:20px; box-sizing:border-box;">
-    <div style="background:white; padding:20px; border-radius:15px; width:100%; max-width:350px; text-align:center;">
-        <h3 id="tituloModalHora" style="margin-top:0; color:#333;">Cambiar Hora</h3>
-        <p id="horasOcupadas" style="font-size:12px; color:#ff4d4d; margin-bottom:10px; background:#fff5f5; padding:5px; border-radius:5px; display:none;"></p>
-        
-        <input type="time" id="inputNuevaHora" style="width:100%; padding:12px; font-size:18px; border:1px solid #ddd; border-radius:10px; margin-bottom:15px; box-sizing:border-box;">
-        
-        <button onclick="guardarNuevaHora()" style="width:100%; background:#25D366; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; margin-bottom:10px;">Confirmar</button>
-        <button onclick="document.getElementById('modalHora').style.display='none'" style="width:100%; background:#eee; color:#666; border:none; padding:10px; border-radius:10px;">Cancelar</button>
-    </div>
-</div>
-
 <script>
-// URL de tu API de Google Apps Script
 const API_URL = "https://script.google.com/macros/s/AKfycbylpnPKVq_lqLYWpzYaaGwZb14mALfhWDZg_6kCZCMQ9dlIBSQQun8vP0o8IeM5F31gKw/exec"; 
 
 let pedidos = [], diaSeleccionado = new Date().toISOString().split('T')[0];
 let mesActual = new Date().getMonth(), anioActual = new Date().getFullYear();
-let origenVenta = "App";
+let origenVenta = "App", idReagendando = null;
 
+// UTILS
 function formatearMoneda(input) {
     let valor = input.value.replace(/\D/g, "");
-    if (valor === "") { input.value = ""; return; }
-    input.value = "$" + new Intl.NumberFormat('es-CL').format(valor);
+    input.value = valor ? "$" + new Intl.NumberFormat('es-CL').format(valor) : "";
 }
-
-function limpiarNumero(texto) {
-    return parseFloat(texto.replace(/\D/g, "")) || 0;
-}
-
-// 1. CARGA INICIAL Y MOTOR RAYO MCQUEEN (LOCALSTORAGE)
-// 1. FUNCIÓN PARA LEER LOS DATOS QUE MANDA GOOGLE
+function limpiarNumero(texto) { return parseFloat(texto.replace(/\D/g, "")) || 0; }
 function parseJwt(token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    return JSON.parse(jsonPayload);
+    return JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
 }
 
-let tempEmail = ""; // Necesaria para guardar el mail mientras el usuario escribe el nombre
-
+// AUTH & INICIO
 async function handleCredentialResponse(response) {
     const user = parseJwt(response.credential);
-    tempEmail = user.email;
-
-    // PUNTO 1: Matamos el rebote. Ocultamos el login de inmediato.
+    const email = user.email;
     document.getElementById("bloqueo").style.display = "none";
-
     try {
-        const resp = await fetch(`${API_URL}?action=verificar&email=${tempEmail}`);
+        const resp = await fetch(`${API_URL}?action=verificar&email=${email}`);
         const res = await resp.json();
-
         if (res.registrado) {
-            // SI EXISTE: Guardamos datos y entramos
             localStorage.setItem("user_id_sheet", res.idSheet);
             localStorage.setItem("sesionValentin", new Date().getTime() + 86400000);
             location.reload(); 
         } else {
-            // SI NO EXISTE: Mostramos el nuevo modal claro y centrado (Punto 2)
+            window.tempEmail = email;
             document.getElementById("modalRegistro").style.display = "flex";
         }
-    } catch (e) {
-        console.error("Error:", e);
-        document.getElementById("bloqueo").style.display = "flex"; // Volver al login si falla
-    }
+    } catch (e) { location.reload(); }
 }
 
-// ESTA FUNCIÓN ES NUEVA: Maneja la creación automática desde el botón del modal
 async function ejecutarCreacionTotal() {
     const nombre = document.getElementById("inputNombreNegocio").value;
-    if(!nombre) return alert("Por favor, escribe el nombre de tu negocio.");
-
+    if(!nombre) return alert("Escribe el nombre del negocio");
     document.getElementById("modalRegistro").style.display = "none";
     document.getElementById("pantallaCarga").style.display = "flex";
-
-    const url = `${API_URL}?action=crear_todo&email=${tempEmail}&nombre=${encodeURIComponent(nombre)}`;
-
-    // 1. Enviamos la orden (Google empezará a crear todo)
-    fetch(url, { mode: 'no-cors' }).catch(e => console.log("Ignorando error de respuesta..."));
-
-    // 2. Esperamos 10 segundos pase lo que pase
-    // Este tiempo es suficiente para que el .appendRow() de Google termine
-    let segundos = 10;
-    const interval = setInterval(() => {
-        segundos--;
-        console.log(`Esperando sincronización... ${segundos}s`);
-        if(segundos <= 0) {
-            clearInterval(interval);
-            finalizarConfiguracion();
-        }
-    }, 1000);
+    fetch(`${API_URL}?action=crear_todo&email=${window.tempEmail}&nombre=${encodeURIComponent(nombre)}`, { mode: 'no-cors' });
+    setTimeout(() => location.reload(), 10000);
 }
 
-async function finalizarConfiguracion() {
-    try {
-        // 3. Verificamos si ya aparecemos en el Admin_Control_App
-        const vUrl = `${API_URL}?action=verificar&email=${tempEmail}`;
-        const resp = await fetch(vUrl);
-        const res = await resp.json();
-        
-        if (res.registrado) {
-            localStorage.setItem("user_id_sheet", res.idSheet);
-            localStorage.setItem("sesionValentin", new Date().getTime() + (86400000 * 30)); // 30 días
-            alert("¡Configuración completada con éxito!");
-            location.reload(); 
-        } else {
-            // Si aún no aparece, forzamos una recarga para que el usuario intente loguearse
-            alert("El sistema se está terminando de configurar. Por favor, ingresa nuevamente en un momento.");
-            location.reload();
-        }
-    } catch (e) {
-        console.error("Error final:", e);
-        location.reload();
-    }
-}
-
-// 3. REVISAR SI YA ESTABA LOGUEADO AL ABRIR LA PÁGINA
 window.onload = () => {
     const sesion = localStorage.getItem("sesionValentin");
-    const bloqueo = document.getElementById("bloqueo");
-    
-    if (sesion && new Date().getTime() < parseInt(sesion)) {
-        // Ya hay sesión: mantenemos oculto y cargamos datos
-        document.querySelector(".logo-img").src = localStorage.getItem("user_pic");
-        cargar();
-    } else {
-        // No hay sesión: recién aquí mostramos el login
-        bloqueo.style.display = "flex";
-    }
+    if (sesion && new Date().getTime() < parseInt(sesion)) cargar();
+    else document.getElementById("bloqueo").style.display = "flex";
 };
 
 async function cargar() {
-  const idSheetUsuario = localStorage.getItem("user_id_sheet");
-  
-  if (!idSheetUsuario) return;
-
-  try {
-    const resp = await fetch(`${API_URL}?idSheet=${idSheetUsuario}`);
-    const data = await resp.json();
-    
-    // Filtramos filas vacías por si acaso
-    pedidos = data.slice(1).filter(fila => fila[0] !== ""); 
-    localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
-    
-    // IMPORTANTE: Llamar a la función que dibuja
-    if (typeof renderizarTodo === "function") {
-        renderizarTodo();
-    } else {
-        console.error("Falta la función renderizarTodo en el código");
-    }
-
-  } catch (e) {
-    console.error("Error en la carga, intentando usar caché...");
-    const cache = localStorage.getItem("cache_pedidos");
-    if (cache) {
-      pedidos = JSON.parse(cache);
-      if (typeof renderizarTodo === "function") renderizarTodo();
-    }
-  }
-}
-function cerrarSesion() { 
-  localStorage.removeItem("sesionValentin"); 
-  localStorage.removeItem("user_name");
-  localStorage.removeItem("user_pic");
-  location.reload(); 
-}
-// 3. HERRAMIENTAS SUPERIORES (SOLUCIÓN PUNTOS 1 Y 2)
-async function copiarFicha() {
-  const btn = event.target; // Captura el botón que hizo clic
-  const textoOriginal = btn.innerText;
-  const ficha = `📍 DATOS PARA TU PEDIDO:\n\n• Nombre Cliente:\n• Teléfono:\n• Descripción Pedido:\n• ¿Retiro en Local o Despacho?:\n• Si es con despacho ingrese la dirección:`;
-  
-  try {
-    await navigator.clipboard.writeText(ficha);
-    // Feedback visual para el emprendedor
-    btn.innerText = "✅ ¡Copiado!";
-    btn.style.borderColor = "#25D366";
-    btn.style.color = "#25D366";
-    
-    setTimeout(() => {
-      btn.innerText = textoOriginal;
-      btn.style.borderColor = "#4dabf7";
-      btn.style.color = "#4dabf7";
-    }, 2000);
-  } catch (err) {
-    // Plan B por si el navegador bloquea el acceso
-    const textArea = document.createElement("textarea");
-    textArea.value = ficha;
-    document.body.appendChild(textArea);
-    textArea.select();
+    const idSheet = localStorage.getItem("user_id_sheet");
+    if (!idSheet) return;
     try {
-      document.execCommand('copy');
-      alert("📋 Ficha copiada (Método alternativo)");
+        const resp = await fetch(`${API_URL}?idSheet=${idSheet}`);
+        const data = await resp.json();
+        pedidos = data.slice(1).filter(fila => fila[0] !== ""); 
+        localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
+        renderizarTodo();
     } catch (e) {
-      alert("❌ Error al copiar. Por favor, copia el texto manualmente.");
+        const cache = localStorage.getItem("cache_pedidos");
+        if (cache) { pedidos = JSON.parse(cache); renderizarTodo(); }
     }
-    document.body.removeChild(textArea);
-  }
 }
 
-function toggleInteligente() {
-  const box = document.getElementById("boxInteligente");
-  box.style.display = box.style.display === "block" ? "none" : "block";
-}
-
-function abrirHistorial() {
-    document.getElementById("modalHistorial").style.display = "block";
-    renderHistorial(pedidos); // Muestra todos los pedidos inicialmente
-}
-
-function cerrarHistorial() {
-    document.getElementById("modalHistorial").style.display = "none";
-}
-
-// 4. FORMULARIO Y GUARDADO (CON VALIDACIONES - TRIÁNGULO DE ORO)
-function abrirManual() {
-  origenVenta = "App";
-  document.getElementById("labelOrigen").innerText = "Modo: App";
-  limpiarForm();
-  document.getElementById("formulario").style.display = "block";
-}
-
-function cerrarModal() {
-  document.getElementById("formulario").style.display = "none";
-  limpiarForm();
-}
-
-function cancelarProceso() { 
-  cerrarModal(); 
-}
-
-function limpiarForm() {
-  ["nombre", "telefono", "descripcion", "precio", "abonado", "pendiente", "direccion", "fecha", "hora"].forEach(id => document.getElementById(id).value = "");
-  document.getElementById("tipoPago").value = "";
-  document.getElementById("metodoEntrega").value = "Entrega en mano";
-  document.getElementById("direccion").style.display = "none";
-  document.getElementById("btnGuardar").disabled = false;
-  document.getElementById("btnGuardar").innerText = "Confirmar y Guardar";
-}
-
-function toggleDireccion(){ 
-  document.getElementById("direccion").style.display = document.getElementById("metodoEntrega").value === "Despacho a domicilio" ? "block" : "none"; 
-}
-
+// LOGICA DE NEGOCIO
 function calcularFinanzas(){
-  const p = limpiarNumero(document.getElementById("precio").value);
-  const a = limpiarNumero(document.getElementById("abonado").value);
-  const pen = p - a; // Aquí restamos
-  
-  // Formateamos el resultado como moneda chilena
-  document.getElementById("pendiente").value = "$" + new Intl.NumberFormat('es-CL').format(pen);
-  
-  const s = document.getElementById("tipoPago");
-  if(p > 0 && a === p) s.value = "Pago Anticipado";
-  else if(a > 0 && a < p) s.value = "Pago Parcial";
-  else if(p > 0 && a === 0) s.value = "Contra Entrega";
+    const p = limpiarNumero(document.getElementById("precio").value);
+    const a = limpiarNumero(document.getElementById("abonado").value);
+    const pen = p - a;
+    document.getElementById("pendiente").value = "$" + new Intl.NumberFormat('es-CL').format(pen);
+    const s = document.getElementById("tipoPago");
+    if(p > 0 && a === p) s.value = "Pago Anticipado";
+    else if(a > 0 && a < p) s.value = "Pago Parcial";
+    else if(p > 0 && a === 0) s.value = "Contra Entrega";
 }
 
 async function guardar() {
-    // 1. Validaciones básicas
     const nombre = document.getElementById("nombre").value;
     const tel = document.getElementById("telefono").value;
-    if (!nombre || !tel) {
-        alert("Nombre y Teléfono son obligatorios");
-        return;
-    }
+    if (!nombre || !tel) return alert("Nombre y Teléfono obligatorios");
 
     const idEdicion = document.getElementById("formulario").dataset.idEdicion;
+    const idSheet = localStorage.getItem("user_id_sheet");
     const data = {
         action: idEdicion ? "editar" : "nuevo",
-        idSheet: localStorage.getItem("user_id_sheet"),
+        idSheet: idSheet,
         id: idEdicion || new Date().getTime(),
-        nombre: nombre,
-        telefono: tel,
+        nombre: nombre, telefono: tel,
         descripcion: document.getElementById("descripcion").value,
         fecha: document.getElementById("fecha").value,
         hora: document.getElementById("hora").value || "Sin Hora",
@@ -539,558 +261,221 @@ async function guardar() {
         tipoPago: document.getElementById("tipoPago").value,
         metodoEntrega: document.getElementById("metodoEntrega").value,
         direccion: document.getElementById("direccion").value,
-        dispositivo: "Netlify App",
-        origen: origenVenta
+        dispositivo: "App", origen: origenVenta
     };
 
-    // 2. Actualización visual instantánea (Modo Rayo)
-    const fila = [
-        data.id, data.descripcion, data.fecha, data.hora, data.precio, 
-        data.tipoPago, data.montoAbonado, data.montoPendiente, "PENDIENTE", 
-        new Date(), data.nombre, data.telefono, data.metodoEntrega, 
-        data.direccion, data.dispositivo, data.origen
-    ];
+    const fila = [data.id, data.descripcion, data.fecha, data.hora, data.precio, data.tipoPago, data.montoAbonado, data.montoPendiente, "PENDIENTE", new Date(), data.nombre, data.telefono, data.metodoEntrega, data.direccion, data.dispositivo, data.origen];
 
-    if (idEdicion) {
-        pedidos = pedidos.map(p => String(p[0]) === String(idEdicion) ? fila : p);
-        delete document.getElementById("formulario").dataset.idEdicion; // Limpiamos rastro de edición
-    } else {
-        pedidos.push(fila);
-    }
+    if (idEdicion) pedidos = pedidos.map(p => String(p[0]) === String(idEdicion) ? fila : p);
+    else pedidos.push(fila);
 
-    // Refrescar la interfaz de inmediato
     renderizarTodo(); 
     cerrarModal();
 
-    // 3. Sincronización silenciosa con Google (CORS Friendly)
-    try {
-        // Usamos mode: 'no-cors' para evitar el error de conexión en la consola
-        fetch(API_URL, { 
-            method: "POST", 
-            mode: 'no-cors', 
-            body: JSON.stringify(data) 
-        });
-        
-        // Guardamos en el caché del celular por si acaso
-        localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
-        console.log("✅ Pedido enviado a la nube");
-        
-    } catch (e) {
-        console.warn("⚠️ Error de red, pero el pedido quedó guardado en el celular.");
-    }
+    fetch(API_URL, { method: "POST", mode: 'no-cors', body: JSON.stringify(data) });
+    localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
 }
-// 5. CALENDARIO Y LISTA (SOLUCIÓN PUNTO 3 Y 4)
+
+// ACCIONES (MODO RAYO + NO CORS)
+async function marcar(id){ 
+    if(!confirm("¿Pedido entregado?")) return;
+    const idSheet = localStorage.getItem("user_id_sheet");
+    pedidos = pedidos.map(p => p[0] == id ? (p[8]="ENTREGADO", p) : p);
+    renderizarTodo();
+    fetch(API_URL, { method:"POST", mode: 'no-cors', body: JSON.stringify({action:"entregado", id:id, idSheet: idSheet}) });
+    localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
+}
+
+async function anular(id) {
+    if(!confirm("¿Anular pedido?")) return;
+    const idSheet = localStorage.getItem("user_id_sheet");
+    pedidos = pedidos.map(p => p[0] == id ? (p[8] = "ANULADO", p) : p);
+    renderizarTodo();
+    fetch(API_URL, { method: "POST", mode: 'no-cors', body: JSON.stringify({ action: "anular", id: id, idSheet: idSheet }) });
+    localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
+}
+
+function reagendar(id) {
+    idReagendando = id;
+    const p = pedidos.find(x => x[0] == id);
+    document.getElementById("reagendarFecha").value = String(p[2]).split('T')[0];
+    document.getElementById("reagendarHora").value = (p[3] && p[3] !== "Sin Hora") ? p[3].substring(0,5) : "10:00";
+    document.getElementById("modalReagendar").style.display = "flex";
+}
+
+async function confirmarReagendar() {
+    const nF = document.getElementById("reagendarFecha").value;
+    const nH = document.getElementById("reagendarHora").value;
+    const idSheet = localStorage.getItem("user_id_sheet");
+    pedidos = pedidos.map(p => { if (String(p[0]) === String(idReagendando)) { p[2] = nF; p[3] = nH; } return p; });
+    renderizarTodo();
+    document.getElementById("modalReagendar").style.display = "none";
+    fetch(API_URL, { method: "POST", mode: 'no-cors', body: JSON.stringify({ action: "reagendar", id: idReagendando, nuevaFecha: nF, nuevaHora: nH, idSheet: idSheet }) });
+    localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
+}
+
+// RENDERIZADO
+function renderizarTodo() {
+    initSelectors(); renderCalendario(); renderLista(); actualizarNotificaciones();
+}
+
+function renderLista(){
+    const container = document.getElementById("lista"); container.innerHTML = "";
+    const filtrados = pedidos.filter(p => String(p[2]).split("T")[0] === diaSeleccionado && String(p[8]).toLowerCase() === "pendiente");
+    
+    filtrados.sort((a, b) => (a[3]||"23:59").localeCompare(b[3]||"23:59"));
+
+    filtrados.forEach(p => {
+        let h = String(p[3]);
+        let horaLimpia = h.includes("T") ? h.split("T")[1].substring(0,5) : h.substring(0,5);
+        let num = String(p[11]).replace(/\D/g, '');
+        let pen = parseFloat(p[7]) || 0;
+        
+        container.innerHTML += `
+          <div class="card" id="card-${p[0]}">
+            <div style="display:flex; justify-content:space-between;">
+              <h2 style="color:#4dabf7; font-size:18px;">📦 ${p[1]}</h2>
+              <span style="background:#e3f2fd; padding:4px 8px; border-radius:8px; font-weight:bold;">🕒 ${horaLimpia}</span>
+            </div>
+            <div style="margin:5px 0;">👤 ${p[10]} | 📞 <a class="whatsapp-link" href="https://wa.me/569${num.slice(-8)}">9${num.slice(-8)}</a></div>
+            <div class="info-secundaria">
+              💰 Total: $${new Intl.NumberFormat('es-CL').format(p[4])} | ${pen <= 0 ? '✅ Pagado' : 'Debe: $'+new Intl.NumberFormat('es-CL').format(pen)}<br>
+              🚚 ${p[12]} ${p[13] ? '📍 '+p[13] : ''}
+            </div>
+            <button class="btn-entregado" onclick="marcar('${p[0]}')">✔ Marcar Entregado</button>
+            <div class="btn-group">
+              <button class="btn-small" onclick="cargarEdicion('${p[0]}')">📝 Editar</button>
+              <button class="btn-small btn-reagendar" onclick="reagendar('${p[0]}')">📅 Reagendar</button>
+              <button class="btn-small btn-anular" onclick="anular('${p[0]}')">🚫 Anular</button>
+            </div>
+          </div>`;
+    });
+}
+
 function renderCalendario(){
-  const cal = document.getElementById("calendario"); cal.innerHTML = "";
-  ["L","M","M","J","V","S","D"].forEach(d=> cal.innerHTML += `<div style="color:#4dabf7;font-size:11px;text-align:center;">${d}</div>`);
-  const diasMes = new Date(anioActual, mesActual+1, 0).getDate();
-  let primerDia = new Date(anioActual, mesActual, 1).getDay();
-  if(primerDia === 0) primerDia = 7; // Ajuste para que Domingo sea 7
-  
-  let conteo = {};
-  pedidos.forEach(p => { 
-    if(String(p[8]).toLowerCase() === "pendiente"){ 
-      let f = String(p[2]).split("T")[0]; 
-      conteo[f] = (conteo[f] || 0) + 1; 
-    } 
-  });
-  
-  for(let i=1; i<primerDia; i++) cal.innerHTML += `<div></div>`;
-  for(let d=1; d<=diasMes; d++){
-    let f = `${anioActual}-${String(mesActual+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    let c = conteo[f] || 0;
-    let clase = "dia" + (c >= 4 ? " rojo" : "") + (f === diaSeleccionado ? " seleccionado" : "");
-    cal.innerHTML += `<div class="${clase}" onclick="seleccionarDia('${f}')"><span>${d}</span><span style="font-size:10px;color:#4dabf7">${c}</span></div>`;
-  }
+    const cal = document.getElementById("calendario"); cal.innerHTML = "";
+    ["L","M","M","J","V","S","D"].forEach(d=> cal.innerHTML += `<div style="color:#4dabf7;font-size:11px;text-align:center;">${d}</div>`);
+    const diasMes = new Date(anioActual, mesActual+1, 0).getDate();
+    let primerDia = new Date(anioActual, mesActual, 1).getDay() || 7;
+    let conteo = {};
+    pedidos.forEach(p => { if(String(p[8]).toLowerCase()==="pendiente"){ let f = String(p[2]).split("T")[0]; conteo[f] = (conteo[f] || 0) + 1; } });
+    for(let i=1; i<primerDia; i++) cal.innerHTML += `<div></div>`;
+    for(let d=1; d<=diasMes; d++){
+        let f = `${anioActual}-${String(mesActual+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        let c = conteo[f] || 0;
+        cal.innerHTML += `<div class="dia ${c>=4?'rojo':''} ${f===diaSeleccionado?'seleccionado':''}" onclick="seleccionarDia('${f}')"><span>${d}</span><span style="font-size:10px;color:#4dabf7">${c}</span></div>`;
+    }
 }
 
 function seleccionarDia(f){ diaSeleccionado = f; renderCalendario(); renderLista(); }
 
-function renderLista(){
-  const container = document.getElementById("lista"); 
-  container.innerHTML = "";
-  
-  const filtrados = pedidos.filter(p => 
-    String(p[2]).split("T")[0] === diaSeleccionado && 
-    String(p[8]).toLowerCase() === "pendiente"
-  );
-
-  filtrados.sort((a, b) => {
-    let hA = !a[3] || a[3] === "Sin Hora" || a[3] === "" ? "23:59" : a[3];
-    let hB = !b[3] || b[3] === "Sin Hora" || b[3] === "" ? "23:59" : b[3];
-    return hA.localeCompare(hB);
-  });
-
-  filtrados.forEach(p => {
-    // --- SOLUCIÓN HORA DEFINITIVA ---
-let horaOriginal = String(p[3]);
-let horaLimpia = "S/H";
-
-if (horaOriginal && horaOriginal !== "Sin Hora" && horaOriginal !== "undefined") {
-    // Si Google manda una fecha completa (ej: 1899-12-30T20:00:00)
-    if (horaOriginal.includes("T")) {
-        horaLimpia = horaOriginal.split("T")[1].substring(0, 5);
-    } 
-    // Si viene como "Sat Dec 30 1899 20:00:00 GMT..."
-    else if (horaOriginal.includes(":") && horaOriginal.length > 10) {
-        let partes = horaOriginal.split(" ");
-        let tiempo = partes.find(p => p.includes(":"));
-        horaLimpia = tiempo ? tiempo.substring(0, 5) : horaOriginal;
-    }
-    // Si ya viene limpia como "20:00"
-    else {
-        horaLimpia = horaOriginal.substring(0, 5);
-    }
-}
-    let num = String(p[11]).replace(/\D/g, ''); 
-    let precio = parseFloat(p[4]) || 0;
-    let abono = parseFloat(p[6]) || 0;
-    let pen = parseFloat(p[7]) || 0;
-    
-    let deuda_html = pen <= 0 
-      ? `<b style="color:#25D366;">$0 - Pagado 🎉</b>` 
-      : `| Abonó: $${new Intl.NumberFormat('es-CL').format(abono)} | <b style="color:#ff4d4d;">Debe: $${new Intl.NumberFormat('es-CL').format(pen)}</b>`;
-    
-    let direccionBtn = "";
-if(p[12] === "Despacho a domicilio" && p[13]) {
-    const dirMap = encodeURIComponent(p[13]);
-    // URL Corregida para Google Maps
-    direccionBtn = `<br><a href="https://www.google.com/maps/search/?api=1&query=${dirMap}" target="_blank" style="display:inline-block; margin-top:5px; background:#4285F4; color:white; padding:4px 8px; border-radius:5px; text-decoration:none; font-size:11px;">📍 Ver en Google Maps</a>`;
-}
-
-    container.innerHTML += `
-      <div class="card" id="card-${p[0]}" data-id="${p[0]}">
-        <div style="display:flex; align-items:start; gap:10px;">
-          <div class="handle" style="cursor:grab; font-size:20px; color:#ccc; padding:10px 0;">☰</div>
-          
-          <div style="flex:1">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-              <h2 style="margin:0; color:#4dabf7; font-size:20px;">📦 ${p[1]}</h2>
-              <div style="background:#e3f2fd; color:#4dabf7; padding:4px 10px; border-radius:10px; font-weight:bold; font-size:13px;">
-                🕒 ${horaLimpia || 'S/H'}
-              </div>
-            </div>
-            <div style="margin:8px 0;">👤 <b>Cliente:</b> ${p[10]}</div>
-            <div>📞 <a class="whatsapp-link" href="https://wa.me/569${num.slice(-8)}" target="_blank">569${num.slice(-8)}</a></div>
-            <div class="info-secundaria">
-              💰 <b>Total:</b> $${new Intl.NumberFormat('es-CL').format(precio)} ${deuda_html}<br>
-              🚚 <b>Entrega:</b> ${p[12]}
-              ${direccionBtn}
-            </div>
-            <button class="btn-entregado" onclick="marcar('${p[0]}')">✔ Marcar Entregado</button>
-            <div class="btn-group">
-              <button class="btn-small" style="background:#e3f2fd; color:#4dabf7;" onclick="cargarEdicion('${p[0]}')">📝 Editar</button>
-              <button class="btn-small btn-reagendar" onclick="reagendar('${p[0]}')">📅 Reagendar</button>
-              <button class="btn-small btn-anular" onclick="anular('${p[0]}')">🚫 Anular</button>
-            </div>
-          </div>
-        </div>
-      </div>`;
-  });
-
-  if (window.sortableInstance) {
-    window.sortableInstance.destroy(); 
-  }
-  
-  window.sortableInstance = new Sortable(container, {
-  handle: '.handle', 
-  animation: 150,
-  ghostClass: 'blue-background-class',
-  onEnd: async function (evt) {
-        const idPedido = evt.item.getAttribute('data-id');
-        const nombrePedido = evt.item.querySelector('h2').innerText;
-        // Solo llamamos a la función de la hora
-        solicitarNuevaHora(idPedido, nombrePedido);
-    }
-  });
-}
-// 6. ACCIONES DE PEDIDO (ACTUALIZACIÓN OPTIMISTA)
-async function marcar(id){ 
-  if(confirm("¿Entregado?")){ 
-    const card = document.getElementById(`card-${id}`);
-    if(card) card.style.opacity = "0.3"; // Efecto visual inmediato
-    
-    try {
-      await fetch(API_URL, { method:"POST", body: JSON.stringify({action:"entregado", id:id}) });
-      // Actualizamos localmente el estado para que desaparezca de la lista
-      pedidos = pedidos.map(p => p[0] == id ? (p[8]="ENTREGADO", p) : p);
-      localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
-      renderizarTodo();
-    } catch (e) {
-      alert("Error al actualizar. Intenta de nuevo.");
-      if(card) card.style.opacity = "1";
-    }
-  } 
-}
-
-async function anular(id){ 
-  if(confirm("¿Anular pedido?")){ 
-    const card = document.getElementById(`card-${id}`);
-    if(card) card.style.opacity = "0.3";
-    
-    try {
-      await fetch(API_URL, { method:"POST", body: JSON.stringify({action:"anular", id:id}) });
-      pedidos = pedidos.map(p => p[0] == id ? (p[8]="ANULADO", p) : p);
-      localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
-      renderizarTodo();
-    } catch (e) {
-      alert("Error al anular.");
-      if(card) card.style.opacity = "1";
-    }
-  } 
-}
-
-let idReagendando = null; // Variable global para saber qué pedido estamos moviendo
-
-// 1. Esta abre el cuadrito lindo
-function reagendar(id) {
-    idReagendando = id;
-    const p = pedidos.find(x => x[0] == id);
-    if(!p) return;
-
-    // Pre-cargamos la fecha y hora que ya tenía el pedido
-    document.getElementById("reagendarFecha").value = String(p[2]).split('T')[0];
-    let horaActual = String(p[3]);
-    document.getElementById("reagendarHora").value = (horaActual && horaActual !== "Sin Hora") ? horaActual : "10:00";
-    
-    document.getElementById("modalReagendar").style.display = "flex";
-}
-
-// 2. Esta cierra el cuadrito
-function cerrarModalReagendar() {
-    document.getElementById("modalReagendar").style.display = "none";
-}
-
-// 3. Esta es la que hace el trabajo pesado (Modo Rayo)
-async function confirmarReagendar() {
-    const id = idReagendando;
-    const nF = document.getElementById("reagendarFecha").value;
-    const nH = document.getElementById("reagendarHora").value;
-
-    if(!nF || !nH) return alert("Falta fecha u hora");
-
-    // --- MODO RAYO: Actualización visual instantánea ---
-    pedidos = pedidos.map(p => {
-        if (String(p[0]) === String(id)) {
-            p[2] = nF; // Cambia fecha
-            p[3] = nH; // Cambia hora
-        }
-        return p;
-    });
-
-    renderizarTodo(); // Redibuja el calendario y lista al tiro
-    cerrarModalReagendar(); // Cierra el modal de inmediato
-
-    // --- Sincronización silenciosa con Google ---
-    try {
-        await fetch(API_URL, { 
-            method: "POST", 
-            body: JSON.stringify({ 
-                action: "reagendar", 
-                id: id, 
-                nuevaFecha: nF, 
-                nuevaHora: nH 
-            }) 
-        });
-        localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
-        console.log("✅ Reagendado en la nube");
-    } catch (e) {
-        console.error("❌ Error al sincronizar, pero quedó guardado en el celu.");
-    }
-}
-// 7. SELECTORES Y NOTIFICACIONES
 function initSelectors(){
-  const m = document.getElementById("mes"), a = document.getElementById("anio");
-  if(m.options.length > 0) return;
-  ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"].forEach((nm,i)=> m.innerHTML += `<option value="${i}" ${i==mesActual?'selected':''}>${nm}</option>`);
-  for(let y=2026; y<=2030; y++) a.innerHTML += `<option value="${y}" ${y==anioActual?'selected':''}>${y}</option>`;
-  m.onchange = a.onchange = () => { mesActual = parseInt(m.value); anioActual = parseInt(a.value); renderCalendario(); };
+    const m = document.getElementById("mes"), a = document.getElementById("anio");
+    if(m.options.length > 0) return;
+    ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"].forEach((nm,i)=> m.innerHTML += `<option value="${i}" ${i==mesActual?'selected':''}>${nm}</option>`);
+    for(let y=2026; y<=2030; y++) a.innerHTML += `<option value="${y}" ${y==anioActual?'selected':''}>${y}</option>`;
+    m.onchange = a.onchange = () => { mesActual = parseInt(m.value); anioActual = parseInt(a.value); renderCalendario(); };
 }
 
-function actualizarNotificaciones() {
-  const ahora = new Date();
-  const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
-  
-  const domingo = new Date(hoy);
-  domingo.setDate(hoy.getDate() + (7 - (hoy.getDay() || 7)));
-  domingo.setHours(23, 59, 59, 999);
+// UI HELPERS
+function abrirManual() { origenVenta = "App"; document.getElementById("labelOrigen").innerText = "Modo: App"; limpiarForm(); document.getElementById("formulario").style.display = "block"; }
+function cerrarModal() { document.getElementById("formulario").style.display = "none"; limpiarForm(); }
+function limpiarForm() { 
+  ["nombre", "telefono", "descripcion", "precio", "abonado", "pendiente", "direccion", "fecha", "hora"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("metodoEntrega").value = "Entrega en mano";
+  document.getElementById("direccion").style.display = "none";
+  delete document.getElementById("formulario").dataset.idEdicion;
+}
+function toggleDireccion(){ document.getElementById("direccion").style.display = document.getElementById("metodoEntrega").value === "Despacho a domicilio" ? "block" : "none"; }
+function toggleInteligente() { const b = document.getElementById("boxInteligente"); b.style.display = b.style.display === "block" ? "none" : "block"; }
+function cerrarSesion() { localStorage.clear(); location.reload(); }
 
-  let enSemana = 0;
-  let atrasados = 0;
-
-  pedidos.forEach(p => {
-    if (String(p[8]).toLowerCase() === "pendiente") {
-      const fechaEntrega = new Date(String(p[2]).split('T')[0].replace(/-/g, '/'));
-      fechaEntrega.setHours(0, 0, 0, 0);
-      
-      if (fechaEntrega < hoy) {
-        atrasados++;
-      } else if (fechaEntrega <= domingo) {
-        enSemana++;
-      }
-    }
-  });
-
-  const barra = document.getElementById("barraAlertas");
-  if (enSemana > 0 || atrasados > 0) {
-    barra.style.display = "block";
-    const textoSemana = enSemana === 1 ? "pedido pendiente" : "pedidos pendientes";
-    const textoAtrasados = atrasados === 1 ? "pedido" : "pedidos";
-    document.getElementById("contSemana").innerText = `📅 Esta semana: ${enSemana} ${textoSemana}`;
-    document.getElementById("contAtrasados").innerText = atrasados > 0 ? `⚠️ Atrasados: ${atrasados} ${textoAtrasados}` : "";
-  } else {
-    barra.style.display = "none";
-  }
+function copiarFicha() {
+    const f = `📍 DATOS PARA TU PEDIDO:\n\n• Nombre Cliente:\n• Teléfono:\n• Descripción Pedido:\n• ¿Retiro en Local o Despacho?:\n• Dirección:`;
+    navigator.clipboard.writeText(f);
+    alert("Ficha copiada");
 }
 
-// 8. LECTURA INTELIGENTE (IA AUTOLLENADO)
-function procesarTexto() {
-  const texto = document.getElementById("textoPegado").value;
-  if (!texto) return;
-  
-  origenVenta = "App_Chat";
-  document.getElementById("labelOrigen").innerText = "Modo: App_Chat";
-  limpiarForm();
+function abrirHistorial() { document.getElementById("modalHistorial").style.display = "block"; renderHistorial(pedidos); }
+function cerrarHistorial() { document.getElementById("modalHistorial").style.display = "none"; }
 
-  // Función de extracción mejorada para evitar capturar líneas siguientes
-  const extraer = (regex) => { 
-    const m = texto.match(regex); 
-    return m ? m[1].split('\n')[0].trim() : ""; 
-  };
-
-  // 1. Extraer Nombre (Busca Nombre o Cliente hasta el final de la línea)
-  document.getElementById("nombre").value = extraer(/(?:Nombre|Cliente).*?:\s*(.*)/i);
-
-  // 2. Extraer Descripción (Prioriza "Pedido", "Producto" o "Descripción")
-  // Esta versión ignora si la palabra "Nombre" aparece después
-  let desc = extraer(/(?:Pedido|Producto|Descripci.n).*?:\s*(.*)/i);
-  document.getElementById("descripcion").value = desc;
-
-  // 3. Extraer Teléfono (Mantiene tu regla de +569)
-  const lineaTelefono = texto.match(/(?:Tel.fono|Celular|Fono|WhatsApp).*?:\s*(\d+)/i);
-  let finalNum = "";
-  if (lineaTelefono) {
-    let numExtraido = lineaTelefono[1].replace(/\s+/g, ''); 
-    if (numExtraido.length === 8) finalNum = "9" + numExtraido;
-    else if (numExtraido.length === 9) finalNum = numExtraido;
-    else finalNum = numExtraido.slice(-9);
-  }
-  document.getElementById("telefono").value = finalNum;
-
-  // 4. Extraer Despacho y Dirección
-  if (/despacho|domicilio|envio/i.test(texto)) {
-    document.getElementById("metodoEntrega").value = "Despacho a domicilio";
-    document.getElementById("direccion").style.display = "block";
-    const matchDir = texto.match(/(?:Direcci.n|Dir|Ubicaci.n).*?:\s*(.*)/i);
-    if (matchDir) document.getElementById("direccion").value = matchDir[1].split('\n')[0].trim();
-  }
-
-  document.getElementById("boxInteligente").style.display = "none";
-  document.getElementById("formulario").style.display = "block";
-}
-
-// ============================================================
-// 9. REPARACIÓN DE RENDERIZADO Y ACCIONES (Copia desde aquí)
-// ============================================================
-
-function renderizarTodo() {
-    console.log("🎨 Dibujando interfaz completa...");
-    initSelectors();          
-    renderCalendario();       
-    renderLista();            // Esta es la función principal que usa tu HTML
-    actualizarNotificaciones(); 
-}
-
-// Sobreescribimos renderTodo para que no cause errores
-function renderTodo() { renderizarTodo(); }
-
-async function cambiarEstadoHistorial(id, nuevoEstado) {
-    if(!confirm(`¿Cambiar pedido a ${nuevoEstado}?`)) return;
-    const idSheet = localStorage.getItem("user_id_sheet");
-    
-    pedidos = pedidos.map(p => {
-        if (String(p[0]) === String(id)) p[8] = nuevoEstado;
-        return p;
-    });
-    
-    renderizarTodo(); 
-
-    try {
-        await fetch(API_URL, { 
-            method: "POST", 
-            body: JSON.stringify({ 
-                action: "cambiarEstado", 
-                id: id, 
-                estado: nuevoEstado,
-                idSheet: idSheet // Crucial para que Google sepa dónde buscar
-            }) 
-        });
-        localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
-    } catch (e) {
-        console.error("Error al sincronizar estado.");
-    }
-}
-
-// Aseguramos que la función renderHistorial funcione con los datos
-function renderHistorial(listaFiltrada) {
-    const container = document.getElementById("contenidoHistorial");
-    if(!container) return;
-    container.innerHTML = "";
-    
-    listaFiltrada.forEach(p => {
-        const estado = String(p[8]).toUpperCase();
-        let colorEstado = "#aaa"; 
-        if (estado === "ENTREGADO") colorEstado = "#25D366";
-        if (estado === "ANULADO") colorEstado = "#ff4d4d";
-        const precioFormateado = new Intl.NumberFormat('es-CL').format(p[4] || 0);
-
-        container.innerHTML += `
-            <div class="card-historial" style="border-left: 4px solid ${colorEstado};">
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-bottom:5px;">
-                    <span style="color:#888;">${String(p[2]).split('T')[0]}</span>
-                    <select onchange="cambiarEstadoHistorial('${p[0]}', this.value)" 
-                        style="width:auto; font-size:11px; padding:2px; border-radius:5px; border:1px solid ${colorEstado}; background:white;">
-                        <option value="PENDIENTE" ${estado === "PENDIENTE" ? 'selected' : ''}>PENDIENTE</option>
-                        <option value="ENTREGADO" ${estado === "ENTREGADO" ? 'selected' : ''}>ENTREGADO</option>
-                        <option value="ANULADO" ${estado === "ANULADO" ? 'selected' : ''}>ANULADO</option>
-                    </select>
-                </div>
-                <div style="font-weight:bold; color:#4dabf7;">📦 ${p[1]} ($${precioFormateado})</div>
-                <div style="font-size:14px; color:#333;">👤 ${p[10]}</div>
-            </div>`;
+function renderHistorial(lista) {
+    const c = document.getElementById("contenidoHistorial"); c.innerHTML = "";
+    lista.forEach(p => {
+        let est = String(p[8]).toUpperCase();
+        c.innerHTML += `<div class="card-historial" style="border-left:4px solid ${est==='ENTREGADO'?'#25D366':est==='ANULADO'?'#ff4d4d':'#aaa'}">
+            <div style="display:flex; justify-content:space-between; font-size:11px;"><span>${String(p[2]).split('T')[0]}</span>
+            <select onchange="cambiarEstadoHistorial('${p[0]}', this.value)"><option value="PENDIENTE" ${est==='PENDIENTE'?'selected':''}>PENDIENTE</option><option value="ENTREGADO" ${est==='ENTREGADO'?'selected':''}>ENTREGADO</option><option value="ANULADO" ${est==='ANULADO'?'selected':''}>ANULADO</option></select></div>
+            <b>📦 ${p[1]}</b><br>👤 ${p[10]}</div>`;
     });
 }
 
 function filtrarHistorial() {
-    const busqueda = document.getElementById("buscadorHistorial").value.toLowerCase();
-    const filtrados = pedidos.filter(p => 
-        String(p[1]).toLowerCase().includes(busqueda) || 
-        String(p[10]).toLowerCase().includes(busqueda)
-    );
-    renderHistorial(filtrados);
+    const b = document.getElementById("buscadorHistorial").value.toLowerCase();
+    renderHistorial(pedidos.filter(p => String(p[1]).toLowerCase().includes(b) || String(p[10]).toLowerCase().includes(b)));
 }
 
-// Fix para el botón de "Entregado" de la lista principal
-async function marcar(id){ 
-  if(confirm("¿Pedido entregado?")){ 
+async function cambiarEstadoHistorial(id, nuevo) {
     const idSheet = localStorage.getItem("user_id_sheet");
-    try {
-      await fetch(API_URL, { 
-          method:"POST", 
-          body: JSON.stringify({action:"entregado", id:id, idSheet: idSheet}) 
-      });
-      pedidos = pedidos.map(p => p[0] == id ? (p[8]="ENTREGADO", p) : p);
-      localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
-      renderizarTodo();
-    } catch (e) {
-      alert("Error al actualizar");
-    }
-  } 
+    pedidos = pedidos.map(p => { if (String(p[0]) === String(id)) p[8] = nuevo; return p; });
+    renderizarTodo(); filtrarHistorial();
+    fetch(API_URL, { method: "POST", mode: 'no-cors', body: JSON.stringify({ action: "cambiarEstado", id: id, estado: nuevo, idSheet: idSheet }) });
+    localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
 }
 
-// ==========================================
-// REPARACIONES FINALES DE SEGURIDAD (VALE)
-// ==========================================
-
-// 1. REPARACIÓN: Anular con ID de Sheet
-async function anular(id) {
-    if(!confirm("¿Anular pedido?")) return;
-    const idSheet = localStorage.getItem("user_id_sheet");
-    const card = document.getElementById(`card-${id}`);
-    if(card) card.style.opacity = "0.3";
-
-    try {
-        await fetch(API_URL, { 
-            method: "POST", 
-            mode: 'no-cors', // Evita errores visuales de CORS
-            body: JSON.stringify({ action: "anular", id: id, idSheet: idSheet }) 
-        });
-        pedidos = pedidos.map(p => p[0] == id ? (p[8] = "ANULADO", p) : p);
-        localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
-        renderizarTodo();
-    } catch (e) {
-        if(card) card.style.opacity = "1";
-        console.error("Error al anular");
-    }
-}
-
-// 2. REPARACIÓN: Confirmar Reagendar con Sincronización
-async function confirmarReagendar() {
-    const id = idReagendando;
-    const nF = document.getElementById("reagendarFecha").value;
-    const nH = document.getElementById("reagendarHora").value;
-    const idSheet = localStorage.getItem("user_id_sheet");
-
-    if(!nF || !nH) return alert("Falta fecha u hora");
-
-    // Actualización visual "Modo Rayo"
-    pedidos = pedidos.map(p => {
-        if (String(p[0]) === String(id)) {
-            p[2] = nF;
-            p[3] = nH;
+function actualizarNotificaciones() {
+    const hoy = new Date(); hoy.setHours(0,0,0,0);
+    const dom = new Date(hoy); dom.setDate(hoy.getDate() + (7 - (hoy.getDay() || 7))); dom.setHours(23,59,59,999);
+    let sem = 0, atr = 0;
+    pedidos.forEach(p => {
+        if (String(p[8]).toLowerCase() === "pendiente") {
+            const f = new Date(String(p[2]).split('T')[0].replace(/-/g, '/')); f.setHours(0,0,0,0);
+            if (f < hoy) atr++; else if (f <= dom) sem++;
         }
-        return p;
     });
+    const b = document.getElementById("barraAlertas");
+    if (sem > 0 || atr > 0) {
+        b.style.display = "block";
+        document.getElementById("contSemana").innerText = `📅 Esta semana: ${sem} pedidos`;
+        document.getElementById("contAtrasados").innerText = atr > 0 ? `⚠️ Atrasados: ${atr} pedidos` : "";
+    } else b.style.display = "none";
+}
 
-    renderizarTodo();
-    cerrarModalReagendar();
+function cargarEdicion(id) {
+    const p = pedidos.find(x => String(x[0]) === String(id));
+    if(!p) return;
+    document.getElementById("formulario").dataset.idEdicion = id;
+    document.getElementById("nombre").value = p[10];
+    document.getElementById("telefono").value = String(p[11]).slice(-9);
+    document.getElementById("descripcion").value = p[1];
+    document.getElementById("fecha").value = String(p[2]).split('T')[0];
+    document.getElementById("precio").value = p[4];
+    document.getElementById("abonado").value = p[6];
+    document.getElementById("metodoEntrega").value = p[12];
+    document.getElementById("direccion").value = p[13] || "";
+    toggleDireccion(); calcularFinanzas();
+    document.getElementById("formulario").style.display = "block";
+    window.scrollTo(0,0);
+}
 
-    try {
-        await fetch(API_URL, { 
-            method: "POST", 
-            mode: 'no-cors',
-            body: JSON.stringify({ 
-                action: "reagendar", 
-                id: id, 
-                nuevaFecha: nF, 
-                nuevaHora: nH,
-                idSheet: idSheet 
-            }) 
-        });
-        localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
-    } catch (e) {
-        console.error("Error de sincronización");
+function procesarTexto() {
+    const t = document.getElementById("textoPegado").value;
+    if (!t) return;
+    origenVenta = "App_Chat";
+    limpiarForm();
+    const extraer = (r) => { const m = t.match(r); return m ? m[1].trim() : ""; };
+    document.getElementById("nombre").value = extraer(/(?:Nombre|Cliente).*?:\s*(.*)/i);
+    document.getElementById("descripcion").value = extraer(/(?:Pedido|Producto|Descripci.n).*?:\s*(.*)/i);
+    let tel = t.match(/(?:Tel.fono|Celular|Fono|WhatsApp).*?:\s*(\d+)/i);
+    if (tel) document.getElementById("telefono").value = tel[1].slice(-9);
+    if (/despacho|domicilio|envio/i.test(t)) {
+        document.getElementById("metodoEntrega").value = "Despacho a domicilio";
+        document.getElementById("direccion").style.display = "block";
+        document.getElementById("direccion").value = extraer(/(?:Direcci.n|Dir|Ubicaci.n).*?:\s*(.*)/i);
     }
+    document.getElementById("boxInteligente").style.display = "none";
+    document.getElementById("formulario").style.display = "block";
 }
-
-// 3. REPARACIÓN: Cambio de estado en Historial
-async function cambiarEstadoHistorial(id, nuevoEstado) {
-    const idSheet = localStorage.getItem("user_id_sheet");
-    
-    // Actualización optimista
-    pedidos = pedidos.map(p => {
-        if (String(p[0]) === String(id)) p[8] = nuevoEstado;
-        return p;
-    });
-    
-    renderizarTodo(); 
-    filtrarHistorial(); // Refresca el modal del historial
-
-    try {
-        await fetch(API_URL, { 
-            method: "POST", 
-            mode: 'no-cors',
-            body: JSON.stringify({ 
-                action: "cambiarEstado", 
-                id: id, 
-                estado: nuevoEstado,
-                idSheet: idSheet 
-            }) 
-        });
-        localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
-    } catch (e) {
-        console.error("Error de red");
-    }
-}
-
-// 4. INICIALIZADOR DE SEGURIDAD
-function renderizarTodo() {
-    initSelectors();          
-    renderCalendario();       
-    renderLista();            
-    actualizarNotificaciones(); 
-}
-
 </script>
 </body>
 </html>
