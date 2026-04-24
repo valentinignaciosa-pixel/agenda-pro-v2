@@ -285,27 +285,37 @@ function parseJwt(token) {
 async function handleCredentialResponse(response) {
     const user = parseJwt(response.credential);
     const email = user.email;
-    console.log("🔍 Intentando validar email:", email); // PRUEBA 1
 
     try {
         const resp = await fetch(`${API_URL}?action=verificar&email=${email}`);
         const res = await resp.json();
-        
-        console.log("📡 Respuesta completa del servidor:", res); // PRUEBA 2
 
         if (res.registrado) {
-            console.log("✅ Usuario encontrado. ID de Planilla:", res.idSheet);
+            // USUARIO EXISTE: Entra directo
             localStorage.setItem("user_id_sheet", res.idSheet); 
             localStorage.setItem("sesionValentin", new Date().getTime() + 86400000);
-            localStorage.setItem("user_pic", user.picture);
             document.getElementById("bloqueo").style.display = "none";
             cargar();
         } else {
-            console.warn("❌ El servidor dice que el mail NO está registrado.");
-            alert("Acceso denegado para: " + email);
+            // USUARIO NUEVO: Lanzar el flujo de creación automática
+            const nombreNegocio = prompt("¡Bienvenido! No tienes una agenda activa. ¿Cómo se llama tu negocio?");
+            
+            if (nombreNegocio) {
+                document.getElementById("bloqueo").innerHTML = "<h2>🚀 Creando tu sistema...</h2><p>Espera unos segundos mientras configuramos tu Drive y Planillas.</p>";
+                
+                // Llamamos a una nueva acción en Google Script para ejecutar 'crearNuevoNegocio'
+                const crearResp = await fetch(`${API_URL}?action=crear_todo&email=${email}&nombre=${nombreNegocio}`);
+                const nuevoRes = await crearResp.json();
+                
+                if (nuevoRes.status === "ok") {
+                    localStorage.setItem("user_id_sheet", nuevoRes.id);
+                    localStorage.setItem("sesionValentin", new Date().getTime() + 86400000);
+                    location.reload(); // Recarga y entra directo a su nueva agenda
+                }
+            }
         }
     } catch (e) {
-        console.error("🔥 Error de conexión:", e);
+        console.error("Error:", e);
     }
 }
 
