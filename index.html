@@ -135,8 +135,8 @@
 <header>
   <div class="logout-btn" onclick="cerrarSesion()">Salir</div>
   <div class="logo-container">
-    <img src="" class="logo-img" alt="Logo" style="border-radius: 50%;">
-  </div>
+  <img src="logo.png" class="logo-img" alt="Logo" style="border-radius: 50%;">
+</div>
   
   <div id="barraAlertas" style="display:none; margin: 10px 15px; padding: 12px; border-radius: 12px; background: #E8DAEF; color: #4A235A; text-align: center; border: 1px solid #D2B4DE;">
     <div id="contSemana" style="font-weight: bold; font-size: 14px;"></div>
@@ -440,9 +440,9 @@ function toggleDireccion(){
 function calcularFinanzas(){
   const p = limpiarNumero(document.getElementById("precio").value);
   const a = limpiarNumero(document.getElementById("abonado").value);
-  const pen = p - a;
+  const pen = p - a; // Aquí restamos
   
-  // Muestra el pendiente también con formato moneda
+  // Formateamos el resultado como moneda chilena
   document.getElementById("pendiente").value = "$" + new Intl.NumberFormat('es-CL').format(pen);
   
   const s = document.getElementById("tipoPago");
@@ -536,13 +536,26 @@ function renderLista(){
   });
 
   filtrados.forEach(p => {
-    // --- SOLUCIÓN HORA FEO: Limpiamos el formato de Google Sheets ---
-    let horaOriginal = String(p[3]);
-    let horaLimpia = (horaOriginal.includes("T")) 
-      ? horaOriginal.split("T")[1].substring(0, 5) 
-      : horaOriginal;
-    // ---------------------------------------------------------------
+    // --- SOLUCIÓN HORA DEFINITIVA ---
+let horaOriginal = String(p[3]);
+let horaLimpia = "S/H";
 
+if (horaOriginal && horaOriginal !== "Sin Hora" && horaOriginal !== "undefined") {
+    // Si Google manda una fecha completa (ej: 1899-12-30T20:00:00)
+    if (horaOriginal.includes("T")) {
+        horaLimpia = horaOriginal.split("T")[1].substring(0, 5);
+    } 
+    // Si viene como "Sat Dec 30 1899 20:00:00 GMT..."
+    else if (horaOriginal.includes(":") && horaOriginal.length > 10) {
+        let partes = horaOriginal.split(" ");
+        let tiempo = partes.find(p => p.includes(":"));
+        horaLimpia = tiempo ? tiempo.substring(0, 5) : horaOriginal;
+    }
+    // Si ya viene limpia como "20:00"
+    else {
+        horaLimpia = horaOriginal.substring(0, 5);
+    }
+}
     let num = String(p[11]).replace(/\D/g, ''); 
     let precio = parseFloat(p[4]) || 0;
     let abono = parseFloat(p[6]) || 0;
