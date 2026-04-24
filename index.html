@@ -333,39 +333,41 @@ async function ejecutarCreacionTotal() {
 
     const url = `${API_URL}?action=crear_todo&email=${tempEmail}&nombre=${encodeURIComponent(nombre)}`;
 
-    try {
-        // Usamos 'no-cors' para que el navegador no bloquee la petición a Google
-        await fetch(url, { mode: 'no-cors' });
-        
-        // Como 'no-cors' no nos deja leer la respuesta, esperamos un tiempo prudente
-        // para que Google termine de crear todo en el backend.
-        console.log("Petición enviada, esperando sincronización...");
-        
-        setTimeout(async () => {
-            try {
-                // Ahora usamos la acción 'verificar' que SI devuelve JSON y no falla
-                const vUrl = `${API_URL}?action=verificar&email=${tempEmail}`;
-                const resp = await fetch(vUrl);
-                const res = await resp.json();
-                
-                if (res.registrado) {
-                    localStorage.setItem("user_id_sheet", res.idSheet);
-                    localStorage.setItem("sesionValentin", new Date().getTime() + 86400000);
-                    alert("¡Sistema configurado con éxito!");
-                    location.reload(); 
-                } else {
-                    // Si no lo encuentra a la primera, intentamos una recarga manual
-                    alert("Configuración terminada. La página se actualizará.");
-                    location.reload();
-                }
-            } catch (e) {
-                location.reload(); 
-            }
-        }, 5000); // 5 segundos es ideal para que Google procese el appendRow
+    // 1. Enviamos la orden (Google empezará a crear todo)
+    fetch(url, { mode: 'no-cors' }).catch(e => console.log("Ignorando error de respuesta..."));
 
+    // 2. Esperamos 10 segundos pase lo que pase
+    // Este tiempo es suficiente para que el .appendRow() de Google termine
+    let segundos = 10;
+    const interval = setInterval(() => {
+        segundos--;
+        console.log(`Esperando sincronización... ${segundos}s`);
+        if(segundos <= 0) {
+            clearInterval(interval);
+            finalizarConfiguracion();
+        }
+    }, 1000);
+}
+
+async function finalizarConfiguracion() {
+    try {
+        // 3. Verificamos si ya aparecemos en el Admin_Control_App
+        const vUrl = `${API_URL}?action=verificar&email=${tempEmail}`;
+        const resp = await fetch(vUrl);
+        const res = await resp.json();
+        
+        if (res.registrado) {
+            localStorage.setItem("user_id_sheet", res.idSheet);
+            localStorage.setItem("sesionValentin", new Date().getTime() + (86400000 * 30)); // 30 días
+            alert("¡Configuración completada con éxito!");
+            location.reload(); 
+        } else {
+            // Si aún no aparece, forzamos una recarga para que el usuario intente loguearse
+            alert("El sistema se está terminando de configurar. Por favor, ingresa nuevamente en un momento.");
+            location.reload();
+        }
     } catch (e) {
-        // Si hay un error real de red
-        alert("Configuración casi lista. Por favor, recarga la página en unos segundos.");
+        console.error("Error final:", e);
         location.reload();
     }
 }
@@ -985,6 +987,110 @@ async function marcar(id){
     }
   } 
 }
+
+// ==========================================
+// REPARACIONES FINALES DE SEGURIDAD (VALE)
+// ==========================================
+
+// 1. REPARACIÓN: Anular con ID de Sheet
+async function anular(id) {
+    if(!confirm("¿Anular pedido?")) return;
+    const idSheet = localStorage.getItem("user_id_sheet");
+    const card = document.getElementById(`card-${id}`);
+    if(card) card.style.opacity = "0.3";
+
+    try {
+        await fetch(API_URL, { 
+            method: "POST", 
+            mode: 'no-cors', // Evita errores visuales de CORS
+            body: JSON.stringify({ action: "anular", id: id, idSheet: idSheet }) 
+        });
+        pedidos = pedidos.map(p => p[0] == id ? (p[8] = "ANULADO", p) : p);
+        localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
+        renderizarTodo();
+    } catch (e) {
+        if(card) card.style.opacity = "1";
+        console.error("Error al anular");
+    }
+}
+
+// 2. REPARACIÓN: Confirmar Reagendar con Sincronización
+async function confirmarReagendar() {
+    const id = idReagendando;
+    const nF = document.getElementById("reagendarFecha").value;
+    const nH = document.getElementById("reagendarHora").value;
+    const idSheet = localStorage.getItem("user_id_sheet");
+
+    if(!nF || !nH) return alert("Falta fecha u hora");
+
+    // Actualización visual "Modo Rayo"
+    pedidos = pedidos.map(p => {
+        if (String(p[0]) === String(id)) {
+            p[2] = nF;
+            p[3] = nH;
+        }
+        return p;
+    });
+
+    renderizarTodo();
+    cerrarModalReagendar();
+
+    try {
+        await fetch(API_URL, { 
+            method: "POST", 
+            mode: 'no-cors',
+            body: JSON.stringify({ 
+                action: "reagendar", 
+                id: id, 
+                nuevaFecha: nF, 
+                nuevaHora: nH,
+                idSheet: idSheet 
+            }) 
+        });
+        localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
+    } catch (e) {
+        console.error("Error de sincronización");
+    }
+}
+
+// 3. REPARACIÓN: Cambio de estado en Historial
+async function cambiarEstadoHistorial(id, nuevoEstado) {
+    const idSheet = localStorage.getItem("user_id_sheet");
+    
+    // Actualización optimista
+    pedidos = pedidos.map(p => {
+        if (String(p[0]) === String(id)) p[8] = nuevoEstado;
+        return p;
+    });
+    
+    renderizarTodo(); 
+    filtrarHistorial(); // Refresca el modal del historial
+
+    try {
+        await fetch(API_URL, { 
+            method: "POST", 
+            mode: 'no-cors',
+            body: JSON.stringify({ 
+                action: "cambiarEstado", 
+                id: id, 
+                estado: nuevoEstado,
+                idSheet: idSheet 
+            }) 
+        });
+        localStorage.setItem("cache_pedidos", JSON.stringify(pedidos));
+    } catch (e) {
+        console.error("Error de red");
+    }
+}
+
+// 4. INICIALIZADOR DE SEGURIDAD
+function renderizarTodo() {
+    initSelectors();          
+    renderCalendario();       
+    renderLista();            
+    actualizarNotificaciones(); 
+}
+
 </script>
 </body>
 </html>
