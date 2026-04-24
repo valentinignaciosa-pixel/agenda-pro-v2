@@ -120,14 +120,28 @@
 
 <body>
 <div id="bloqueo">
-  <h2 style="color:#4dabf7; margin-bottom: 20px;">🔒 Acceso Agenda Pro</h2>
+  <h2 style="color:#4dabf7; margin-bottom: 20px;">🔐 Acceso Agenda Pro</h2>
   <p style="margin-bottom: 20px; color: #666;">Inicia sesión con tu cuenta de Google</p>
-  
   <div id="g_id_onload"
-     data-client_id="393133246985-q2d63f84atqusaidp2168um5qm8jbb4o.apps.googleusercontent.com"
-     data-callback="handleCredentialResponse"
-     data-auto_prompt="false">
+       data-client_id="393133246985-q2d63f84atqusaidp2168um5qm8jbb4o.apps.googleusercontent.com"
+       data-callback="handleCredentialResponse"
+       data-auto_prompt="false">
   </div>
+  <div class="g_id_signin" data-type="standard"></div>
+</div>
+
+<div id="pantallaCarga" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: white; z-index: 10000; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+  <h1 style="font-size: 60px; margin: 0;">🚀</h1>
+  <h2>Creando tu sistema...</h2>
+</div>
+
+<div id="modalRegistro" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.05); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center;">
+  <div style="background: white; padding: 30px; border-radius: 25px; width: 85%; max-width: 350px; text-align: center;">
+    <h2>¡Bienvenida!</h2>
+    <input type="text" id="inputNombreNegocio" placeholder="Nombre de tu local">
+    <button onclick="ejecutarCreacionTotal()" style="background: #4dabf7; color: white;">Comenzar Ahora</button>
+  </div>
+</div>
   
   <div class="g_id_signin" data-type="standard"></div>
 </div>
@@ -281,41 +295,59 @@ function parseJwt(token) {
     return JSON.parse(jsonPayload);
 }
 
-// 2. QUÉ HACER CUANDO GOOGLE DIGA "OK, ES ÉL"
+let tempEmail = ""; // Necesaria para guardar el mail mientras el usuario escribe el nombre
+
 async function handleCredentialResponse(response) {
     const user = parseJwt(response.credential);
-    const email = user.email;
+    tempEmail = user.email;
+
+    // PUNTO 1: Matamos el rebote. Ocultamos el login de inmediato.
+    document.getElementById("bloqueo").style.display = "none";
 
     try {
-        const resp = await fetch(`${API_URL}?action=verificar&email=${email}`);
+        const resp = await fetch(`${API_URL}?action=verificar&email=${tempEmail}`);
         const res = await resp.json();
 
         if (res.registrado) {
-            // USUARIO EXISTE: Entra directo
-            localStorage.setItem("user_id_sheet", res.idSheet); 
+            // SI EXISTE: Guardamos datos y entramos
+            localStorage.setItem("user_id_sheet", res.idSheet);
             localStorage.setItem("sesionValentin", new Date().getTime() + 86400000);
-            document.getElementById("bloqueo").style.display = "none";
-            cargar();
+            location.reload(); 
         } else {
-            // USUARIO NUEVO: Lanzar el flujo de creación automática
-            const nombreNegocio = prompt("¡Bienvenido! No tienes una agenda activa. ¿Cómo se llama tu negocio?");
-            
-            if (nombreNegocio) {
-                document.getElementById("bloqueo").innerHTML = "<h2>🚀 Creando tu sistema...</h2><p>Espera unos segundos mientras configuramos tu Drive y Planillas.</p>";
-                
-                // Llamamos a una nueva acción en Google Script para ejecutar 'crearNuevoNegocio'
-                const crearResp = await fetch(`${API_URL}?action=crear_todo&email=${email}&nombre=${nombreNegocio}`);
-                const nuevoRes = await crearResp.json();
-                
-                if (nuevoRes.status === "ok") {
-                    localStorage.setItem("user_id_sheet", nuevoRes.id);
-                    localStorage.setItem("sesionValentin", new Date().getTime() + 86400000);
-                    location.reload(); // Recarga y entra directo a su nueva agenda
-                }
-            }
+            // SI NO EXISTE: Mostramos el nuevo modal claro y centrado (Punto 2)
+            document.getElementById("modalRegistro").style.display = "flex";
         }
     } catch (e) {
         console.error("Error:", e);
+        document.getElementById("bloqueo").style.display = "flex"; // Volver al login si falla
+    }
+}
+
+// ESTA FUNCIÓN ES NUEVA: Maneja la creación automática desde el botón del modal
+async function ejecutarCreacionTotal() {
+    const nombre = document.getElementById("inputNombreNegocio").value;
+    if(!nombre) return alert("Por favor, escribe el nombre de tu negocio.");
+
+    // PUNTO 3: Ocultar formulario y mostrar el cohete 🚀 centrado
+    document.getElementById("modalRegistro").style.display = "none";
+    document.getElementById("pantallaCarga").style.display = "flex";
+
+    try {
+        const crearResp = await fetch(`${API_URL}?action=crear_todo&email=${tempEmail}&nombre=${nombre}`);
+        const nuevoRes = await crearResp.json();
+        
+        if (nuevoRes.status === "ok") {
+            localStorage.setItem("user_id_sheet", nuevoRes.id);
+            localStorage.setItem("sesionValentin", new Date().getTime() + 86400000);
+            location.reload(); // Recarga y ya entra a su nueva agenda operativa
+        } else {
+            alert("Hubo un error al crear el archivo. Reintenta.");
+            location.reload();
+        }
+    } catch (e) {
+        console.error("Error:", e);
+        alert("Error de conexión.");
+        location.reload();
     }
 }
 
@@ -776,17 +808,22 @@ function procesarTexto() {
   document.getElementById("labelOrigen").innerText = "Modo: App_Chat";
   limpiarForm();
 
+  // Función de extracción mejorada para evitar capturar líneas siguientes
   const extraer = (regex) => { 
     const m = texto.match(regex); 
-    return m ? m[1].trim() : ""; 
+    return m ? m[1].split('\n')[0].trim() : ""; 
   };
 
-  // Extraer Nombre y Descripción
+  // 1. Extraer Nombre (Busca Nombre o Cliente hasta el final de la línea)
   document.getElementById("nombre").value = extraer(/(?:Nombre|Cliente).*?:\s*(.*)/i);
-  document.getElementById("descripcion").value = extraer(/(?:Descripci.n|Pedido|Producto).*?:\s*(.*)/i);
 
-  // Extraer Teléfono (Regla +569)
-  const lineaTelefono = texto.match(/(?:Tel.fono|Celular|Fono).*?:\s*(\d+)/i);
+  // 2. Extraer Descripción (Prioriza "Pedido", "Producto" o "Descripción")
+  // Esta versión ignora si la palabra "Nombre" aparece después
+  let desc = extraer(/(?:Pedido|Producto|Descripci.n).*?:\s*(.*)/i);
+  document.getElementById("descripcion").value = desc;
+
+  // 3. Extraer Teléfono (Mantiene tu regla de +569)
+  const lineaTelefono = texto.match(/(?:Tel.fono|Celular|Fono|WhatsApp).*?:\s*(\d+)/i);
   let finalNum = "";
   if (lineaTelefono) {
     let numExtraido = lineaTelefono[1].replace(/\s+/g, ''); 
@@ -796,12 +833,12 @@ function procesarTexto() {
   }
   document.getElementById("telefono").value = finalNum;
 
-  // Extraer Despacho y Dirección
+  // 4. Extraer Despacho y Dirección
   if (/despacho|domicilio|envio/i.test(texto)) {
     document.getElementById("metodoEntrega").value = "Despacho a domicilio";
     document.getElementById("direccion").style.display = "block";
-    const matchDir = texto.match(/(?:Direcci.n|Dir|ubicaci.n).*?:\s*(.*)/i);
-    if (matchDir) document.getElementById("direccion").value = matchDir[1].trim();
+    const matchDir = texto.match(/(?:Direcci.n|Dir|Ubicaci.n).*?:\s*(.*)/i);
+    if (matchDir) document.getElementById("direccion").value = matchDir[1].split('\n')[0].trim();
   }
 
   document.getElementById("boxInteligente").style.display = "none";
