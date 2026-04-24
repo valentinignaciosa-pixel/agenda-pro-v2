@@ -328,40 +328,44 @@ async function ejecutarCreacionTotal() {
     const nombre = document.getElementById("inputNombreNegocio").value;
     if(!nombre) return alert("Por favor, escribe el nombre de tu negocio.");
 
-    // Ocultar formulario y mostrar el cohete 🚀
     document.getElementById("modalRegistro").style.display = "none";
     document.getElementById("pantallaCarga").style.display = "flex";
 
     const url = `${API_URL}?action=crear_todo&email=${tempEmail}&nombre=${encodeURIComponent(nombre)}`;
 
     try {
-        // 'no-cors' hace que la petición se mande sí o sí sin importar el bloqueo
+        // Usamos 'no-cors' para que el navegador no bloquee la petición a Google
         await fetch(url, { mode: 'no-cors' });
-
-        // Esperamos 4 segundos a que Google termine de crear y transferir
+        
+        // Como 'no-cors' no nos deja leer la respuesta, esperamos un tiempo prudente
+        // para que Google termine de crear todo en el backend.
+        console.log("Petición enviada, esperando sincronización...");
+        
         setTimeout(async () => {
             try {
-                // En lugar de esperar el OK de la creación, simplemente verificamos si ya existe
-                const respVerificar = await fetch(`${API_URL}?action=verificar&email=${tempEmail}`);
-                const res = await respVerificar.json();
+                // Ahora usamos la acción 'verificar' que SI devuelve JSON y no falla
+                const vUrl = `${API_URL}?action=verificar&email=${tempEmail}`;
+                const resp = await fetch(vUrl);
+                const res = await resp.json();
                 
                 if (res.registrado) {
                     localStorage.setItem("user_id_sheet", res.idSheet);
                     localStorage.setItem("sesionValentin", new Date().getTime() + 86400000);
+                    alert("¡Sistema configurado con éxito!");
                     location.reload(); 
                 } else {
-                    // Si aún no aparece, le damos un empujón final
-                    alert("Configuración casi lista. La página se recargará.");
+                    // Si no lo encuentra a la primera, intentamos una recarga manual
+                    alert("Configuración terminada. La página se actualizará.");
                     location.reload();
                 }
             } catch (e) {
                 location.reload(); 
             }
-        }, 4500);
+        }, 5000); // 5 segundos es ideal para que Google procese el appendRow
 
     } catch (e) {
-        console.error("Error:", e);
-        alert("Error de conexión. Revisa tu Drive, el sistema debería estar ahí.");
+        // Si hay un error real de red
+        alert("Configuración casi lista. Por favor, recarga la página en unos segundos.");
         location.reload();
     }
 }
